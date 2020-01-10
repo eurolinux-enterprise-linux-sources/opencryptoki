@@ -1,0 +1,47 @@
+diff -urp opencryptoki-2.4.orig/usr/lib/pkcs11/api/shrd_mem.c opencryptoki-2.4/usr/lib/pkcs11/api/shrd_mem.c
+--- opencryptoki-2.4.orig/usr/lib/pkcs11/api/shrd_mem.c.in	2011-08-15 08:17:14.000000000 -0400
++++ opencryptoki-2.4/usr/lib/pkcs11/api/shrd_mem.c.in	2011-08-15 10:22:49.000000000 -0400
+@@ -351,43 +351,6 @@ attach_shared_memory() {
+       return NULL;
+    }
+ 
+-
+-   // SAB check for the group id here and membership here as well
+-   grp = getgrnam("pkcs11");
+-   if ( grp ) {
+-        int i=0;
+-        char member=0;
+-
+-        pw = getpwuid(getuid());
+-
+-        epw = getpwuid(geteuid());
+-
+-        while( grp->gr_mem[i] ) {
+-           if (pw) {
+-             if ( strncmp(pw->pw_name, grp->gr_mem[i],strlen(pw->pw_name)) == 0 ){
+-                member = 1;
+-                break;
+-             }
+-           }
+-           if (epw) {
+-              if ( strncmp(epw->pw_name, grp->gr_mem[i],strlen(epw->pw_name)) == 0 ){
+-                  member = 1;
+-                  break; 
+-              }
+-           }
+-           i++;
+-        }
+-        if ( ! member ) {
+-             return NULL;  // SAB don't bother even attaching...
+-        }
+-
+-
+-   } else {
+-        return NULL;
+-   }
+-
+-
+-   
+    Anchor->shm_tok = ftok(TOK_PATH,'b');
+ 
+    // Get the shared memory id.

@@ -1,0 +1,3 @@
+if ENABLE_ICCTOK
+SUBDIRS = 4758_status
+endif

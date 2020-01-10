@@ -1,0 +1,53 @@
+* opencryptoki-2.3.3 (Jan 13 2011)
+- Moderate fixes and clean-ups to key unwrapping mechanisms
+- several pkcsconf fixes, some minor changes
+- Important fix to CCA library name in pkcs11_startup
+- PKCS padding length fix for symmetric ciphers
+- Better RSA public exponent validations in all supported tokens
+- Huge testsuite refactor
+- Several other minor fixes and cleanups
+
+* opencryptoki-2.3.2 (Jul 29 2010)
+- Significant clean-ups to the building and packaging systems and many
+  small fixes by Klaus Heinrich Kiwi <klausk@linux.vnet.ibm.com>
+- Various minor fixes to slot daemon and init script by Dan Horák
+  <dan@danny.cz>
+- Some RSA PKCS#1 v1.5 padding clean-ups by Ramon de Carvalho Valle
+  <rcvalle@linux.vnet.ibm.com>
+- Human-readable flags output to pkcsconf, some minor soft-token
+  fixes by Kent Yoder <key@linux.vnet.ibm.com>
+- Improved overall session/object look-up performance. Note that this
+  change might crash buggy callers with badly-written session/object
+  handle tracking - Klaus Heinrich Kiwi <klausk@linux.vnet.ibm.com>
+
+* openCryptoki-2.3.1
+- Moved ICA token to use libica-2.0, supporting newer hardware and 4K
+  RSA modulus. Libica-2.x is now *required* to build the ICA token.
+- Moved CCA token to use CCA-4.0, supporting AES, SHA-2 and 4K RSA
+  keys in newer hardware. Although not required for building, CCA-4.0
+  is *required* for running the CCA token.
+
+* openCryptoki-2.2.5
+
+- Fixed bug in comparison of PINs in pkcsconf.
+- Added code to set the encryption and signature schemes of keys imported
+into the TPM token.
+- Added tpm token message to warn when only owner can read the pub SRK.
+- Fixed return code of function failed when it should be buffer too small in
+various mech_des.c mech_des3.c and mech_aes.c files.
+- Moved doc/*.txt to manpage format and integrated them into the build/install
+- Updated testcases to query env vars for PINs and call a set of common
+routines for common operations
+- Added SHA256 support for all tokens
+- Fixed object cleanup when max number of token objects is hit
+- Fixed fd exhaustion bug with spin lock fd
+- Updated TPM stdll for TSS policy handling changes. Trousers 0.2.9+ now
+required with openCryptoki 2.2.5
+- Updated TPM stdll to use TSS_TSPATTRIB_KEYINFO_RSA_MODULUS when retrieving
+the public modulus
+- pkcs11_startup fix for use with s/w fallback support in libica on s390
+- Added the CCA secure key token and migration utility
+- Replaced bcopy/bzero with memcpy/memset throughout the code
+- Removed unused variables throughout the code
+
+* openCryptoki-2.2.4

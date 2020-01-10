@@ -1,0 +1,35 @@
+diff -up opencryptoki-2.3.2/usr/sbin/pkcs11_startup/pkcs11_startup.in.orig opencryptoki-2.3.2/usr/sbin/pkcs11_startup/pkcs11_startup.in
+--- opencryptoki-2.3.2/usr/sbin/pkcs11_startup/pkcs11_startup.in.orig	2010-08-24 17:13:46.000000000 +0200
++++ opencryptoki-2.3.2/usr/sbin/pkcs11_startup/pkcs11_startup.in	2010-08-24 17:14:03.000000000 +0200
+@@ -309,31 +309,6 @@ rm -f @localstatedir@/lib/opencryptoki/p
+ 		        # it from scratch
+ 
+ 
+-# Create the pkcs11 group if it does not exist...
+-cat /etc/group|grep pkcs11 >/dev/null 2>&1
+-rc=$?
+-if [ $rc = 1 ]
+-then
+-   if [ -x @GROUPADD@ ]
+-   then
+-	   @GROUPADD@ pkcs11 >/dev/null 2>&1
+-
+-   else
+-	   echo "Couldn't execute @GROUPADD@. Please add the group 'pkcs11' manually."
+-   fi
+-fi
+-
+-
+-if [ -x @USERMOD@ -a -x @ID@ ]
+-then
+-	# add the pkcs group
+-	# replace spaces by commas
+-	@USERMOD@ -G $( @ID@ --groups --name root | @SED@ -e 'y/ /,/'),pkcs11  root
+-else
+-	echo "Couldn't execute @USERMOD@. Please add root to the group 'pkcs11' manually."
+-fi
+-
+-
+ # For each card run the status command and if successful
+ # create the odm stanza for the file
+ 

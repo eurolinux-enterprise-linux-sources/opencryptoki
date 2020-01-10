@@ -1,0 +1,37 @@
+diff -pruN man.orig/man7/opencryptoki.7.in man/man7/opencryptoki.7.in
+--- man.orig/man7/opencryptoki.7.in	2011-05-18 00:27:00.000000000 +0200
++++ man/man7/opencryptoki.7.in	2011-09-05 13:28:12.203693148 +0200
+@@ -18,6 +18,14 @@ likely that pkcs11_startup is run automa
+ Use the \fIpkcsconf\fP utility to further configure openCryptoki once the
+ daemon is running.
+ 
++.SH "SECURITY NOTE"
++All non-root users that require access to PKCS#11 tokens using openCryptoki
++must be assigned to the \fIpkcs11\fP group to be able to communicate with
++the \fIpkcsslotd\fP daemon. Only fully trusted users should be granted
++membership in the group. Group members can block other openCryptoki users
++from accessing PKCS#11 tokens, and execute arbitrary code with the
++privileges of other openCryptoki users.
++
+ .SH "SEE ALSO"
+ .PD 0
+ .TP
+diff -pruN man.orig/man8/pkcsslotd.8.in man/man8/pkcsslotd.8.in
+--- man.orig/man8/pkcsslotd.8.in	2011-05-18 00:27:00.000000000 +0200
++++ man/man8/pkcsslotd.8.in	2011-09-05 13:37:01.980693153 +0200
+@@ -18,10 +18,11 @@ ipcrm command, such as:
+ 
+ \fIipcrm -M 0x6202AB38\fP
+ 
+-In order to prevent a denial of service against the daemon, the
+-shared memory segment is created with group ownership by the
+-"pkcs11" group. Any application that requires access to a pkcs11
+-token must be run by a user who's a member of the "pkcs11" group.
++The daemon creates the shared memory segment with group ownership by the
++\fIpkcs11\fP group. All non-root users that should be able to use
++openCryptoki need to be members of the group. Only trusted users should be
++assigned to the group, see "SECURITY NOTE" in the \fBopencryptoki\fP(7)
++manual page for details.
+ 
+ .SH "SEE ALSO"
+ .PD 0
