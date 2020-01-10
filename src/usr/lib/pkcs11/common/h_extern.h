@@ -328,12 +328,6 @@ extern MECH_LIST_ELEMENT  mech_list[];
 extern CK_ULONG           mech_list_len;
 
 extern pthread_mutex_t  native_mutex;
-#if SYSVSEM
-extern int xprocsemid;
-#endif
-
-
-extern  void *xproclock;
 
 extern MUTEX    pkcs_mutex, obj_list_mutex, sess_list_mutex, login_mutex;
 
@@ -388,7 +382,10 @@ extern CK_BYTE   ber_AlgSha1[];
 extern CK_ULONG  ber_AlgSha1Len;
 extern CK_BYTE   ber_AlgSha256[];
 extern CK_ULONG  ber_AlgSha256Len;
-
+extern CK_BYTE   ber_AlgSha384[];
+extern CK_ULONG  ber_AlgSha384Len;
+extern CK_BYTE   ber_AlgSha512[];
+extern CK_ULONG  ber_AlgSha512Len;
 
 extern CK_ULONG           des_weak_count;
 extern CK_ULONG           des_semi_weak_count;
@@ -1961,10 +1958,6 @@ CK_RV    object_mgr_get_attribute_values( SESSION           * sess,
 CK_RV    object_mgr_get_object_size( CK_OBJECT_HANDLE   handle,
                                      CK_ULONG         * size );
 
-CK_BBOOL object_mgr_invalidate_handle1( CK_OBJECT_HANDLE handle );
-
-CK_BBOOL object_mgr_invalidate_handle2( OBJECT *obj );
-
 CK_BBOOL object_mgr_purge_session_objects( SESSION       * sess,
                                            SESS_OBJ_TYPE   type );
 
@@ -2479,7 +2472,5 @@ void dump_shm(const char *);
 /* CKA_HIDDEN will be used to filter return results on a C_FindObjects call.
  * Used for objects internal to a token for management of that token */
 #define CKA_HIDDEN              CKA_VENDOR_DEFINED + 0x01000000
-
-
 
 #endif

@@ -42,8 +42,6 @@
 #include "tok_spec_struct.h"
 #include "pkcs32.h"
 
-#include "../api/apiproto.h"
-
 void
 set_perm(int file)
 {
@@ -71,7 +69,7 @@ load_token_data()
 
    sprintf((char *)fname,"%s/%s",(char *)pk_dir, PK_LITE_NV);
 
-   rc = XProcLock( xproclock );
+   rc = XProcLock();
    if (rc != CKR_OK){
       OCK_LOG_ERR(ERR_PROCESS_LOCK);
       goto out_nolock;
@@ -82,10 +80,10 @@ load_token_data()
       /* Better error checking added */
       if (errno == ENOENT) {
          /* init_token_data may call save_token_data, which graps the 
-          * xproclock, so we must release it around this call */
-         XProcUnLock( xproclock );
+          * lock, so we must release it around this call */
+         XProcUnLock();
          init_token_data();
-         rc = XProcLock( xproclock );
+         rc = XProcLock();
          if (rc != CKR_OK){
             OCK_LOG_ERR(ERR_PROCESS_LOCK);
             goto out_nolock;
@@ -121,7 +119,7 @@ load_token_data()
    rc = CKR_OK;
 
 out_unlock:
-   XProcUnLock( xproclock );
+   XProcUnLock();
 
 out_nolock:
    return rc;
@@ -141,7 +139,7 @@ save_token_data()
 
    sprintf((char *)fname,"%s/%s",pk_dir, PK_LITE_NV);
 
-   rc = XProcLock( xproclock );
+   rc = XProcLock();
    if (rc != CKR_OK){
       OCK_LOG_ERR(ERR_PROCESS_LOCK);
       goto out_nolock;
@@ -166,7 +164,7 @@ save_token_data()
    rc = CKR_OK;
 
 done:
-   XProcUnLock( xproclock );
+   XProcUnLock();
 
 out_nolock:
    return rc;
@@ -466,7 +464,7 @@ load_public_token_objects( void )
          }
 
          read_size = fread( buf, 1, size, fp2 );
-	 if (read_size < size) {
+	 if (read_size != size) {
 	    OCK_SYSLOG(LOG_ERR, "Cannot read in token object %s (ignoring it)", fname);
             fclose(fp2);
 	    free(buf);
@@ -1045,6 +1043,7 @@ reload_token_object( OBJECT *obj )
    CK_ULONG_32   size;
    CK_ULONG   size_64;
    CK_RV      rc;
+   size_t     read_size;
 
 
    memset( (char *)fname, 0x0, sizeof(fname) );
@@ -1074,7 +1073,12 @@ reload_token_object( OBJECT *obj )
       goto done;
    }
 
-   fread( buf, size, 1, fp );
+   read_size = fread( buf, 1, size, fp );
+   if (read_size != size) {
+      OCK_SYSLOG(LOG_ERR, "Token object %s appears corrupted (ignoring it)", fname);
+      rc = CKR_FUNCTION_FAILED;
+      goto done;
+   }
 
    size_64 = size;
 

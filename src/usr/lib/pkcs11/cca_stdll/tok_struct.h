@@ -60,9 +60,9 @@ token_spec_t token_specific  = {
      NULL,
      NULL,
      // SHA-256
-     NULL,
-     NULL,
-     NULL,
+     token_specific_sha2_init,
+     token_specific_sha2_update,
+     token_specific_sha2_final,
 #ifndef NOAES
      // AES
      &token_specific_aes_key_gen,
@@ -70,7 +70,8 @@ token_spec_t token_specific  = {
      &token_specific_aes_cbc,
 #endif
      &token_specific_get_mechanism_list,
-     &token_specific_get_mechanism_info
+     &token_specific_get_mechanism_info,
+     &token_specific_object_add
 };
 
 #endif

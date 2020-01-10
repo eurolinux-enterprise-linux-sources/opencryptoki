@@ -34,6 +34,7 @@
 #include <sys/ipc.h>
 #include <errno.h>
 #include <pwd.h>
+#include <grp.h>
 
 
 #include "pkcs11/pkcs11types.h"
@@ -44,9 +45,8 @@
 #include "tok_spec_struct.h"
 #include "pkcs32.h"
 
-#if (SPINXPL)
 #include <sys/file.h>
-#endif
+#include <syslog.h>
 
 
 
@@ -305,18 +305,6 @@ _CreateMutex( MUTEX *mutex )
 }
 
 CK_RV
-_CreateMsem( sem_t *msem )
-{
-	if (!sem_init( msem,0, 1)) // parm 2 non-0 means pshared  1 is unlocked 0 is locked
-		//if (!sem_init( msem,1, 1)) // parm 2 non-0 means pshared  1 is unlocked 0 is locked
-		return CKR_OK;
-	else{
-		OCK_LOG_ERR(ERR_FUNCTION_FAILED);
-		return CKR_FUNCTION_FAILED;
-	}
-}
-
-CK_RV
 _DestroyMutex( MUTEX *mutex )
 {
 	CK_RV  rc;
@@ -328,38 +316,11 @@ _DestroyMutex( MUTEX *mutex )
 }
 
 CK_RV
-_DestroyMsem( sem_t *msem )
-{
-	if (!sem_destroy(msem))
-		return CKR_OK;
-	else{
-		OCK_LOG_ERR(ERR_FUNCTION_FAILED);
-		return CKR_FUNCTION_FAILED;
-	}
-}
-
-
-CK_RV
 _LockMutex( MUTEX *mutex )
 {
 	pthread_mutex_lock( mutex);
 	return CKR_OK;
 
-}
-
-CK_RV
-_LockMsem( sem_t *msem )
-{
-	if (!msem){
-		OCK_LOG_ERR(ERR_FUNCTION_FAILED);
-		return CKR_FUNCTION_FAILED;
-	}
-	if(!sem_wait(msem)) // block until the semaphore is free
-		return CKR_OK;
-	else{
-		OCK_LOG_ERR(ERR_FUNCTION_FAILED);
-		return CKR_FUNCTION_FAILED;
-	}
 }
 
 CK_RV
@@ -370,210 +331,107 @@ _UnlockMutex( MUTEX *mutex )
 
 }
 
-CK_RV
-_UnlockMsem( sem_t *msem )
-{
-	if (!msem){
-		OCK_LOG_ERR(ERR_FUNCTION_FAILED);
-		return CKR_FUNCTION_FAILED;
-	}
-	if (!sem_post(msem))
-		return CKR_OK;
-	else{
-		OCK_LOG_ERR(ERR_FUNCTION_FAILED);
-		return CKR_FUNCTION_FAILED;
-	}
-}
-
-#if SYSVSEM
-#include <sys/sem.h>
-// These structures are needed to effect a lock
-// using SYS V semaphores...
-static struct sembuf xlock_lock[2]={
-	0,0,0,
-	0,1,SEM_UNDO
-};
-
-static struct sembuf xlock_unlock[1] = {
-	0,-1,(IPC_NOWAIT | SEM_UNDO)
-};
-
-static pthread_mutex_t  semmtx = PTHREAD_MUTEX_INITIALIZER;
-
-#endif
-
-
-int spinxplfd=-1;
-int spin_created=0;
-
-extern void set_perm(int);
+static int spinxplfd=-1;
 
 CK_RV
-CreateXProcLock(void *xproc)
+CreateXProcLock(void)
 {
+	CK_BYTE lockfile[PATH_MAX];
+	struct passwd *pw = NULL;
+	struct stat statbuf;
+	mode_t mode = (S_IRUSR|S_IWUSR|S_IXUSR);
 
-#if (SPINXPL)
-	// open the file that we will do the locking on...
-	spinxplfd = open("/tmp/.pkcs11spinloc",O_CREAT|O_APPEND|O_RDWR,
-			S_IRWXU|S_IRWXG|S_IRWXO);
-	if (spinxplfd) {
+	/* see if it exists */
+	if (spinxplfd == -1) {
 
-		set_perm(spinxplfd);
-		fchmod(spinxplfd,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH | S_IWOTH);
-		spin_created=1;
-	} else {
-		perror("XPROC CREATE file :");
-	}
-	return CKR_OK;
-#elif  SYSVSEM
-	int  semid;
-	int *psem;
-	key_t  tok;
+		/* get userid */
+		if ((pw = getpwuid(getuid())) == NULL) {
+			OCK_SYSLOG(LOG_ERR, "getpwuid(): %s\n",strerror(errno));
+			return CKR_FUNCTION_FAILED;
+		}
 
-	tok  = ftok( pk_dir, 'c' );
+		/* create user-specific directory */
+		sprintf(lockfile, "%s/%s/%s",
+			LOCKDIR_PATH, SUB_DIR, pw->pw_name);
+		/* see if it exists, otherwise mkdir will fail */
+		if (stat(lockfile, &statbuf) < 0) {
+			if (mkdir(lockfile, mode) == -1) {
+				OCK_SYSLOG(LOG_ERR, "mkdir(%s): %s\n",
+					   lockfile, strerror(errno));
+				return CKR_FUNCTION_FAILED;
+			}
 
-	//printf("creating semaphore %x \n",tok);
-
-	psem = (int *)xproc;
-	if ( *psem < 0 ) {
-		if ( (semid = semget(tok,1,IPC_CREAT | 0666)) < 0 ){
-			if (errno == EEXIST) {
-				if ( (semid = semget(tok,0,0)) < 0) {
-					pthread_mutex_unlock(&semmtx);
-					OCK_LOG_ERR(ERR_FUNCTION_FAILED); 
-					return CKR_FUNCTION_FAILED;
-				}
-			} else {
-				pthread_mutex_unlock(&semmtx);
-				OCK_LOG_ERR(ERR_FUNCTION_FAILED); 
+			/* ensure correct perms on user dir */
+			if (chmod(lockfile, mode) == -1) {
+				OCK_SYSLOG(LOG_ERR, "chmod(%s): %s\n",
+					   lockfile, strerror(errno));
 				return CKR_FUNCTION_FAILED;
 			}
 		}
+
+		/* create user lock file */
+		memset(lockfile, 0, PATH_MAX);
+		sprintf(lockfile, "%s/%s/%s/LCK..%s",
+			LOCKDIR_PATH, SUB_DIR, pw->pw_name, SUB_DIR);
+
+		spinxplfd = open(lockfile, O_CREAT|O_RDWR, mode);
+
+		if (spinxplfd == -1) {
+			OCK_SYSLOG(LOG_ERR, "open(%s): %s\n",
+				   lockfile, strerror(errno));
+			return CKR_FUNCTION_FAILED;
+		} else {
+			/* umask may prevent correct mode, so set it. */
+			if (fchmod(spinxplfd, mode) == -1) {
+				OCK_SYSLOG(LOG_ERR, "fchmod(%s): %s\n",
+					   lockfile, strerror(errno));
+				goto err;
+			}
+		}
 	}
-	psem = (int *)xproc;
-	*psem = semid;
-	//pthread_mutex_unlock(&semmtx);
+
 	return CKR_OK;
 
-	// we know that semaphores are created unlocked
-#elif POSIXSEM 
-	return _CreateMsem((sem_t *)xproc);
-#elif PTHREADXPL
-	pthread_mutex_attr_t  mtxattr;
-
-	pthread_mutexattr_init(&mtxattr);
-	pthread_mutexattr_setpshared(&mtxattr,PTHREAD_PROCESS_SHARED);
-	pthread_mutex_init((pthread_mutex_t *)xproc,&mtxattr);
-
-#elif  NOXPROCLOCK
-	return CKR_OK;
-#else
-#error "Define XPROC LOCKS"
-
-#endif
+err:
+	if (spinxplfd != -1)
+		close(spinxplfd);
+	return CKR_FUNCTION_FAILED;
 }
-CK_RV
-DestroyXProcLock(void *xproc)
+
+void
+CloseXProcLock(void)
 {
-#if SPINXPL
-	return CKR_OK;
-#elif SYSVSEM
-	int semid,*psem;
-
-	//printf("Destroying semaphore %x \n",xproc);
-
-	pthread_mutex_lock(&semmtx);
-	psem = (int *)xproc;
-	semid = *psem;
-
-	semctl(semid,1,IPC_RMID,0);
-	pthread_mutex_unlock(&semmtx);
-
-	return CKR_OK;
-#elif POSIXSEM 
-	return _DestroyMsem((sem_t *)xproc);
-#elif  PTHREADXPL
-	return pthread_mutex_destroy((pthread_mutex_t *)xproc);
-#elif  NOXPROCLOCK
-	return CKR_OK;
-#else
-#error "Define XPROC LOCKS"
-#endif
+	if (spinxplfd != -1)
+		close(spinxplfd);
 }
 
 CK_RV
-XProcLock(void *xproc)
+XProcLock(void)
 {
-#if SPINXPL
-	if (!spin_created) {
-		spinxplfd = open("/tmp/.pkcs11spinloc",O_CREAT|O_APPEND|O_RDWR,
-				S_IRWXU|S_IRWXG|S_IRWXO);
-		fchmod(spinxplfd,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH | S_IWOTH);
-		spin_created=1;
-	}
-	if (spinxplfd){
-		flock(spinxplfd,LOCK_EX);
-	}
-	return CKR_OK;
-#elif SYSVSEM
-	int semid,*psem;
-	pthread_mutex_lock(&semmtx);
-	return CKR_OK;
+	if (spinxplfd != -1)
+		flock(spinxplfd, LOCK_EX);
+	else
+		OCK_LOG_DEBUG("No file descriptor to lock with.\n");
 
-	pthread_mutex_lock(&semmtx);
-	psem = (int *)xproc;
-	semid = *psem;
-	semop(semid,&xlock_lock[0],2);
-	pthread_mutex_unlock(&semmtx);
 	return CKR_OK;
-
-#elif POSIXSEM 
-	return _LockMsem((sem_t *)xproc);
-#elif PTHREADXPL
-	return _LockMutex((MUTEX *)xproc);
-#elif  NOXPROCLOCK
-	return CKR_OK;
-#else
-#error "Define XPROC LOCKS"
-
-#endif
 }
+
 CK_RV
-XProcUnLock(void *xproc)
+XProcUnLock(void)
 {
-#if SPINXPL
-	if (!spin_created) {
-		spinxplfd = open("/tmp/.pkcs11spinloc",O_CREAT|O_APPEND|O_RDWR,
-				S_IRWXU|S_IRWXG|S_IRWXO);
-		fchmod(spinxplfd,S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH | S_IWOTH);
-		spin_created=1;
-	}
-	if (spinxplfd) {
-		flock(spinxplfd,LOCK_UN);
-	}
-	return CKR_OK;
-#elif SYSVSEM
-	int semid,*psem;
-	pthread_mutex_unlock(&semmtx);
-	return CKR_OK;
+	if (spinxplfd != -1)
+		flock(spinxplfd, LOCK_UN);
+	else
+		OCK_LOG_DEBUG("No file descriptor to unlock with.\n");
 
-	pthread_mutex_lock(&semmtx);
-	psem = (int *)xproc;
-	semid = *psem;
-	semop(semid,&xlock_unlock[0],1);
-	pthread_mutex_unlock(&semmtx);
 	return CKR_OK;
-#elif POSIXSEM 
-	return _UnlockMsem((sem_t *)xproc);
-#elif PTHREADXPL
-	return _UnlockMutex((MUTEX *)xproc);
-#elif  NOXPROCLOCK
-	return CKR_OK;
-#else
-#error "Define XPROC LOCKS"
-#endif
 }
 
+void
+XProcLock_Init(void)
+{
+	spinxplfd = -1;
+}
 
 //
 //
@@ -947,23 +805,17 @@ attach_shm()
 		return CKR_FUNCTION_FAILED;
 	}
 	if (created == TRUE) {
-#if !(SYSVSEM)
 		// SYSV sem's are a global that is handled in the
 		// Initialize routine...  all others are stored in the
 		// shared memory segment so we have to do
 		// this here after the segment is created
 		// to prevent a core dump
-		CreateXProcLock( &global_shm->mutex );
-		xproclock = (void *)&global_shm->mutex; // need to do this here
-#endif
-		XProcLock( xproclock );
+		XProcLock();
 		global_shm->num_publ_tok_obj = 0;
 		global_shm->num_priv_tok_obj = 0;
 		memset( &global_shm->publ_tok_objs, 0x0, 2048 * sizeof(TOK_OBJ_ENTRY) );
 		memset( &global_shm->priv_tok_objs, 0x0, 2048 * sizeof(TOK_OBJ_ENTRY) );
-		XProcUnLock( xproclock );
-	} else {
-		xproclock = (void *)&global_shm->mutex;
+		XProcUnLock();
 	}
 #elif MMAP
 	{
@@ -1079,14 +931,12 @@ attach_shm()
 
 		global_shm = (LW_SHM_TYPE *)mmap(NULL,sizeof(LW_SHM_TYPE),PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
 		if (created == TRUE) {
-			XProcLock( xproclock );
+			XProcLock();
 			global_shm->num_publ_tok_obj = 0;
 			global_shm->num_priv_tok_obj = 0;
 			memset( &global_shm->publ_tok_objs, 0x0, 2048 * sizeof(TOK_OBJ_ENTRY) );
 			memset( &global_shm->priv_tok_objs, 0x0, 2048 * sizeof(TOK_OBJ_ENTRY) );
-			XProcUnLock( xproclock );
-		} else {
-			xproclock = (void *)&global_shm->mutex;
+			XProcUnLock();
 		}
 
 		rc = CKR_OK;

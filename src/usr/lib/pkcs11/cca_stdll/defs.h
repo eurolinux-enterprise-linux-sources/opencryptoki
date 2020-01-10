@@ -109,6 +109,10 @@ enum {
 #define SHA384_HASH_SIZE	48
 #define SHA512_HASH_SIZE	64
 
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
+
 typedef struct _sha1_ctx {
    unsigned char hash[SHA1_HASH_SIZE+1];
    unsigned int hash_len, tail_len;
@@ -140,6 +144,23 @@ typedef struct _sha2_ctx {
 
 #define DEFAULT_SO_PIN  "87654321"
 
+#define CCA_MAX_SHA256_DATA_LEN        (32 * 1024 * 1024 - 64) /* 32MB - 64 */
+#define CCA_CHAIN_VECTOR_LEN   128
+#define CCA_MAX_TAIL_LEN       64
+#define CCA_HASH_PART_FIRST    0
+#define CCA_HASH_PART_MIDDLE   1
+#define CCA_HASH_PART_LAST     2
+#define CCA_HASH_PART_ONLY     3
+
+struct cca_sha256_ctx {
+	unsigned char chain_vector[CCA_CHAIN_VECTOR_LEN];
+	long chain_vector_len;
+	unsigned char *tail;
+	unsigned long tail_len;
+	unsigned char scratch[SHA2_HASH_SIZE];
+	unsigned long scratch_len;
+	int part;
+};
 
 typedef enum {
    ALL = 1,

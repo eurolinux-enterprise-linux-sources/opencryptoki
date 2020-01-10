@@ -53,10 +53,6 @@
 #include <openssl/evp.h>
 
 #include <tss/platform.h>
-#include <tss/tcpa_defines.h>
-#include <tss/tcpa_typedef.h>
-#include <tss/tcpa_struct.h>
-#include <tss/tcpa_error.h>
 #include <tss/tss_defines.h>
 #include <tss/tss_typedef.h>
 #include <tss/tss_structs.h>
@@ -606,6 +602,7 @@ token_load_srk()
 	TSS_HPOLICY hPolicy;
 	TSS_RESULT result;
 	TSS_UUID SRK_UUID = TSS_UUID_SRK;
+	struct srk_info srk;
 
 	if (hSRK != NULL_HKEY)
 		return TSS_SUCCESS;
@@ -635,9 +632,16 @@ token_load_srk()
 	}
 #endif
 
-	if ((result = Tspi_Policy_SetSecret(hPolicy, TSS_SECRET_MODE_PLAIN, 0, NULL))) {
+	/* get the srk info */
+	memset(&srk, 0, sizeof(srk));
+	if (get_srk_info(&srk))
+		return -1;
+
+	if ((result = Tspi_Policy_SetSecret(hPolicy, (TSS_FLAG)srk.mode, srk.len, (BYTE *)srk.secret))) {
 		OCK_LOG_DEBUG("Tspi_Policy_SetSecret failed. rc=0x%x\n", result);
 	}
+	if (srk.secret)
+		free(srk.secret);
 
 done:
 	return result;
@@ -1599,9 +1603,9 @@ token_specific_login(CK_USER_TYPE userType, CK_CHAR_PTR pPin, CK_ULONG ulPinLen)
 
 		rc = load_private_token_objects();
 
-		XProcLock( xproclock );
+		XProcLock();
 		global_shm->priv_loaded = TRUE;
-		XProcUnLock( xproclock );
+		XProcUnLock();
 	} else {
 		/* SO path --
 		 */

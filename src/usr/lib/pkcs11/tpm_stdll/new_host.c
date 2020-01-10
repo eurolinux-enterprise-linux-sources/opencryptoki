@@ -130,10 +130,6 @@ st_Initialized()
 }
 
 
-#ifdef SPINXPL
-extern int spinxplfd;
-extern int spin_created;
-#endif
 
 // ----------- SAB XXX XXX
 //
@@ -142,11 +138,9 @@ Fork_Initializer(void)
 {
   //    initialized == FALSE; // Get the initialization to be not true
 
-#ifdef SPINXPL
-	spinxplfd = -1;
-	spin_created = 0;
-#endif
 
+	  // Initialize spinlock.
+      XProcLock_Init();
 
           // Force logout.  This cleans out the private session and list
           // and cleans out the private object map
@@ -410,16 +404,17 @@ CK_RV ST_Initialize( void **FunctionList,
 	MY_CreateMutex( &sess_list_mutex );
 	MY_CreateMutex( &login_mutex     );
 
+	if (CreateXProcLock() != CKR_OK) {
+		OCK_LOG_ERR(ERR_PROCESS_LOCK);
+		goto done;
+	}
+
 	init_data_store((char *)PK_DIR);
 
 
 	// Handle global initialization issues first if we have not
 	// been initialized.
 	if (st_Initialized() == FALSE){
-#if SYSVSEM
-		xproclock = (void *)&xprocsemid;
-		CreateXProcLock(xproclock);
-#endif
 		if ( (rc = attach_shm()) != CKR_OK) {
 			OCK_LOG_ERR(ERR_SHM);
 			goto done;
@@ -447,12 +442,14 @@ CK_RV ST_Initialize( void **FunctionList,
 		goto done;
 	}
 
-	/* no need to check for error here, we load what we can and syslog the rest */
+	/* no need to check for error here, we load what we can and
+	 * syslog the rest
+	 */
 	load_public_token_objects();
 
-	XProcLock( xproclock );
+	XProcLock();
 	global_shm->publ_loaded = TRUE;
-	XProcUnLock( xproclock );
+	XProcUnLock();
 
 	init_slotInfo();
 
@@ -506,8 +503,7 @@ CK_RV SC_Finalize( CK_SLOT_ID sid )
 
    detach_shm();
    // close spin lock file
-   if (spin_created)
-     close(spinxplfd);
+   CloseXProcLock();
    if ( token_specific.t_final != NULL) {
       token_specific.t_final();
    }
@@ -1153,7 +1149,6 @@ CK_RV SC_OpenSession( CK_SLOT_ID             sid,
                      CK_FLAGS               flags,
                      CK_SESSION_HANDLE_PTR  phSession )
 {
-   SESSION              * sess;
    CK_BBOOL               locked = FALSE;
    CK_RV                  rc = CKR_OK;
    SLT_CHECK
@@ -1220,7 +1215,7 @@ done:
    
    OCK_LOG_DEBUG("C_OpenSession:  rc = 0x%08x\n", rc);
    if (rc == CKR_OK)
-	OCK_LOG_DEBUG("sess = %d\n", (sess == NULL)?-1:(CK_LONG)sess->handle);
+	OCK_LOG_DEBUG("session = %d\n", (phSession == NULL)?-1:*phSession);
 
    UNLOCKIT;
    return rc;

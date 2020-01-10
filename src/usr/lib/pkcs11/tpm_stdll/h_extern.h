@@ -55,12 +55,6 @@ extern MECH_LIST_ELEMENT  mech_list[];
 extern CK_ULONG           mech_list_len;
 
 extern pthread_mutex_t  native_mutex;
-#if SYSVSEM
-extern int xprocsemid;
-#endif
-
-
-extern  void *xproclock;
 
 extern MUTEX    pkcs_mutex, obj_list_mutex, sess_list_mutex, login_mutex;
 
@@ -1538,10 +1532,6 @@ CK_RV    object_mgr_get_attribute_values( SESSION           * sess,
 
 CK_RV    object_mgr_get_object_size( CK_OBJECT_HANDLE   handle,
                                      CK_ULONG         * size );
-
-CK_BBOOL object_mgr_invalidate_handle1( CK_OBJECT_HANDLE handle );
-
-CK_BBOOL object_mgr_invalidate_handle2( OBJECT *obj );
 
 CK_BBOOL object_mgr_purge_session_objects( SESSION       * sess,
                                            SESS_OBJ_TYPE   type );

@@ -28,12 +28,6 @@ CK_BBOOL        initialized = FALSE;
 pthread_mutex_t  native_mutex ;
 MUTEX   pkcs_mutex, obj_list_mutex, sess_list_mutex, login_mutex;
 
-#if SYSVSEM
-int   xprocsemid = -1;
-#endif
-
-void *xproclock;
-
 struct btree sess_btree = { NULL, NULL, 0, 0 };
 struct btree sess_obj_btree = { NULL, NULL, 0, 0 };
 struct btree publ_token_obj_btree = { NULL, NULL, 0UL, 0UL };
@@ -246,18 +240,6 @@ MECH_LIST_ELEMENT mech_list[] = {
 				    CKF_WRAP         | CKF_UNWRAP  |
 				    CKF_SIGN         | CKF_VERIFY  |
 				    CKF_SIGN_RECOVER | CKF_VERIFY_RECOVER} },
-  { CKM_RSA_PKCS_OAEP,             {512, 2048, CKF_HW           |
-				    CKF_ENCRYPT      | CKF_DECRYPT |
-				    CKF_WRAP         | CKF_UNWRAP  |
-				    CKF_SIGN         | CKF_VERIFY  |
-				    CKF_SIGN_RECOVER | CKF_VERIFY_RECOVER} },
-#if !(NOX509)
-  { CKM_RSA_X_509,                 {512, 2048, CKF_HW           |
-				    CKF_ENCRYPT      | CKF_DECRYPT |
-				    CKF_WRAP         | CKF_UNWRAP  |
-				    CKF_SIGN         | CKF_VERIFY  |
-				    CKF_SIGN_RECOVER | CKF_VERIFY_RECOVER} },
-#endif
   { CKM_MD5_RSA_PKCS,              {512, 2048, CKF_HW      |
 				    CKF_SIGN    | CKF_VERIFY} },
   { CKM_SHA1_RSA_PKCS,             {512, 2048, CKF_HW      |

@@ -1,16 +1,16 @@
 Name:			opencryptoki
 Summary:		Implementation of the PKCS#11 (Cryptoki) specification v2.11
-Version:		2.4
-Release:		2%{?dist}
+Version:		2.4.3.1
+Release:		1%{?dist}
 License:		CPL
 Group:			System Environment/Base
 URL:			http://sourceforge.net/projects/opencryptoki
-Source:			http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source:			http://downloads.sourceforge.net/%{name}/%{name}-%{version}-tar.gz
 Patch0:			%{name}-2.3.2-do-not-create-group-in-pkcs11_startup.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=732756
 Patch1:			opencryptoki-2.4-group.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=730903
-Patch2:			opencryptoki-2.4-pkcs11-group-warning.patch
+# fix locks dir installation
+Patch2:			%{name}-2.4.3-locks.patch
 BuildRoot:		%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires(pre):		shadow-utils coreutils sed
 Requires(post):		chkconfig
@@ -48,17 +48,17 @@ This package contains the development header files for building openCryptoki
 based applications.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{name}
 %patch0 -p1
 %patch1 -p1 -b .group
-%patch2 -p0 -b .group-warning
+%patch2 -p1 -b .locks
 
 %build
 # Upstream tarball has unnecessary executable perms set on the sources
 find . -name '*.[ch]' -print0 | xargs -0 chmod -x
 
 ./bootstrap.sh
-%configure 	\
+%configure	\
 %ifarch s390 s390x
     --enable-icatok --enable-ccatok
 %else
@@ -130,6 +130,10 @@ exit 0
 
 
 %changelog
+* Thu Jul 11 2013 Dan Horák <dhorak@redhat.com> 2.4.3.1-1
+- rebased to 2.4.3.1 (#948349)
+- Resolves: #948349
+
 * Mon Sep  5 2011 Dan Horák <dhorak@redhat.com> 2.4-2
 - don't add root to pkcs11 group (#732756)
 - document implications of the pkcs11 group membership (#730903)
