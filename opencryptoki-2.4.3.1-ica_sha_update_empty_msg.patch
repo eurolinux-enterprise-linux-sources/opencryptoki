@@ -1,0 +1,21 @@
+commit 2094b476ab7c14caecc37add2da43bba11b71bf5
+Author: Ingo Tuchscherer <ingo.tuchscherer@linux.vnet.ibm.com>
+Date:   Fri Aug 15 12:48:46 2014 +0200
+
+    Fixed ica token's SHA update function when passing zero message size
+    
+    Signed-off-by: Ingo Tuchscherer <ingo.tuchscherer@linux.vnet.ibm.com>
+
+diff --git a/usr/lib/pkcs11/ica_s390_stdll/ica_specific.c b/usr/lib/pkcs11/ica_s390_stdll/ica_specific.c
+index 395eebc..4a9c516 100755
+--- a/usr/lib/pkcs11/ica_s390_stdll/ica_specific.c
++++ b/usr/lib/pkcs11/ica_s390_stdll/ica_specific.c
+@@ -699,7 +699,7 @@ token_specific_sha_update(	DIGEST_CONTEXT	*ctx,
+                          * we're not stuck with 0 bytes when the MSG_PART_FINAL
+                          * comes in. - KEY
+                          */
+-                        if (!(in_data_len % 64)) {
++                        if (!(in_data_len % 64) && (in_data_len != 0)) {
+                                 oc_sha_ctx->tail_len = 64;
+                                 memcpy(oc_sha_ctx->tail, in_data + in_data_len - 64, 64);
+                                 in_data_len -= 64;
