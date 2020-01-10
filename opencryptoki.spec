@@ -1,20 +1,23 @@
 Name:			opencryptoki
 Summary:		Implementation of the PKCS#11 (Cryptoki) specification v2.11
-Version:		2.4.3.1
+Version:		3.2
 Release:		2%{?dist}
 License:		CPL
 Group:			System Environment/Base
 URL:			http://sourceforge.net/projects/opencryptoki
-Source:			http://downloads.sourceforge.net/%{name}/%{name}-%{version}-tar.gz
-Patch0:			%{name}-2.3.2-do-not-create-group-in-pkcs11_startup.patch
+Source:			http://downloads.sourceforge.net/%{name}/%{name}-v%{version}.tgz
 # https://bugzilla.redhat.com/show_bug.cgi?id=732756
-Patch1:			opencryptoki-2.4-group.patch
-# fix locks dir installation
-Patch2:			%{name}-2.4.3-locks.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=1027606
-Patch3:			opencryptoki-2.4.3.1-cca-oid-info.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=1131745
-Patch4:			opencryptoki-2.4.3.1-ica_sha_update_empty_msg.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1122505#c8
+Patch0:         %{name}-3.2-fix-root-checks.patch
+# do not install pkcsep11_migrate.1 and pkcscca.1 when it's not enabled
+Patch1:			%{name}-3.2-conditional-manpages.patch
+Patch2:			%{name}-3.2-pkcsep11_migrate-Fixed-parameter-handling-for-pkcsep.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1088512#c18
+Patch3:			%{name}-3.2-Correctly-declare-OAEP-parameter-in-RSA-Wrap-tests-t.patch
+# remove pkcs11_startup from the init script, it's not used anymore
+Patch4:			%{name}-3.2-Remove-pkcs11_startup-from-the-initscript.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1148134#c8
+Patch5:			%{name}-3.2-fix-i686-tests.patch
 BuildRoot:		%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires(pre):		shadow-utils coreutils sed
 Requires(post):		chkconfig
@@ -23,10 +26,13 @@ Requires(preun):	chkconfig
 Requires(preun):	initscripts
 Requires(postun):	initscripts
 BuildRequires:		openssl-devel trousers-devel
+BuildRequires:		openldap-devel
 BuildRequires:		autoconf automake libtool
+BuildRequires:		bison flex
 %ifarch s390 s390x
-BuildRequires:		libica-devel >= 2.0
+BuildRequires:		libica-devel >= 2.3
 %endif
+Requires(pre):		%{name}-libs%{?_isa} = %{version}-%{release}
 Requires:		%{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
@@ -38,6 +44,7 @@ Platform Module (TPM) as well as a software token for testing.
 %package libs
 Group:			System Environment/Libraries
 Summary:		The runtime libraries for opencryptoki package
+Requires(pre):		shadow-utils
 
 %description libs
 The runtime libraries for use with openCryptoki based applications.
@@ -45,19 +52,20 @@ The runtime libraries for use with openCryptoki based applications.
 %package devel
 Group:			Development/Libraries
 Summary:		Development files for openCryptoki
-Requires:		%{name}-libs = %{version}-%{release}
+Requires:		%{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the development header files for building openCryptoki
 based applications.
 
 %prep
-%setup -q -n %{name}-%{name}
-%patch0 -p1
-%patch1 -p1 -b .group
-%patch2 -p1 -b .locks
-%patch3 -p1 -b .cca-oid
-%patch4 -p1 -b .ica_sha
+%setup -q -n %{name}
+%patch0 -p1 -b .fix-root
+%patch1 -p1 -b .man
+%patch2 -p1 -b .pkcsep11_migrate
+%patch3 -p1 -b .OAEP-in-test
+%patch4 -p1 -b .remove-pkcs11_startup
+%patch5 -p1 -b .i686-tests
 
 %build
 # Upstream tarball has unnecessary executable perms set on the sources
@@ -66,19 +74,15 @@ find . -name '*.[ch]' -print0 | xargs -0 chmod -x
 ./bootstrap.sh
 %configure	\
 %ifarch s390 s390x
-    --enable-icatok --enable-ccatok
+    --enable-icatok --enable-ccatok --enable-ep11tok --enable-pkcsep11_migrate
 %else
-    --disable-icatok --disable-ccatok
+    --disable-icatok --disable-ccatok --disable-ep11tok --disable-pkcsep11_migrate --disable-pkcscca_migrate
 %endif
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} CHGRP=/bin/true
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make install DESTDIR=$RPM_BUILD_ROOT
-
-mkdir -p $RPM_BUILD_ROOT/%{_sharedstatedir}/%{name}
+make install DESTDIR=$RPM_BUILD_ROOT CHGRP=/bin/true
 
 # Remove unwanted cruft
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{name}/*.la
@@ -108,7 +112,7 @@ if [ "$1" = "0" ] ; then
 fi
 exit 0
 
-%pre
+%pre libs
 getent group pkcs11 >/dev/null || groupadd -r pkcs11
 exit 0
 
@@ -118,7 +122,12 @@ exit 0
 %{_initddir}/pkcsslotd
 %{_sbindir}/*
 %{_mandir}/man*/*
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
+%{_libdir}/opencryptoki/methods
+%{_libdir}/pkcs11/methods
 %dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}
+%dir %attr(770,root,pkcs11) %{_localstatedir}/lock/%{name}
+%dir %attr(770,root,pkcs11) %{_localstatedir}/lock/%{name}/*
 
 %files libs
 %defattr(-,root,root,-)
@@ -129,6 +138,24 @@ exit 0
 #   documentation suggests that programs should dlopen "PKCS11_API.so".
 %{_libdir}/opencryptoki
 %{_libdir}/pkcs11
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/swtok/
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/swtok/TOK_OBJ/
+%doc doc/README.tpm_stdll
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/tpm/
+%doc doc/README.icsf_stdll
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/icsf/
+%ifarch s390 s390x
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/lite/
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/lite/TOK_OBJ/
+%doc doc/README-IBM_CCA_users
+%doc doc/README.cca_stdll
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/ccatok/
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/ccatok/TOK_OBJ/
+%doc doc/README.ep11_stdll
+%config(noreplace) %{_sysconfdir}/%{name}/ep11tok.conf
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/ep11tok/
+%dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/ep11tok/TOK_OBJ/
+%endif
 
 %files devel
 %defattr(-,root,root,-)
@@ -136,6 +163,12 @@ exit 0
 
 
 %changelog
+* Thu Apr 09 2015 Petr Lautrbach <plautrba@redhat.com> 3.2-2
+- add upstream commit a2d60d856fa9780c42ef5c058aa0865502b3dcdc to fix tests on i686
+
+* Mon Jan 19 2015 Petr Lautrbach <plautrba@redhat.com> 3.2-1
+- new upstream release (#1148134)
+
 * Wed Aug 20 2014 Petr Lautrbach <plautrba@redhat.com> 2.4.3.1-2
 - use correct OID in CKA_ECDSA_PARAMS attribute
 - fixed ica token's SHA update function when passing zero message size
