@@ -1,7 +1,7 @@
 Name:			opencryptoki
 Summary:		Implementation of the PKCS#11 (Cryptoki) specification v2.11
 Version:		2.4.3.1
-Release:		1%{?dist}
+Release:		1%{?dist}.1
 License:		CPL
 Group:			System Environment/Base
 URL:			http://sourceforge.net/projects/opencryptoki
@@ -11,6 +11,8 @@ Patch0:			%{name}-2.3.2-do-not-create-group-in-pkcs11_startup.patch
 Patch1:			opencryptoki-2.4-group.patch
 # fix locks dir installation
 Patch2:			%{name}-2.4.3-locks.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1027606
+Patch3:			opencryptoki-2.4.3.1-cca-oid-info.patch
 BuildRoot:		%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires(pre):		shadow-utils coreutils sed
 Requires(post):		chkconfig
@@ -52,6 +54,7 @@ based applications.
 %patch0 -p1
 %patch1 -p1 -b .group
 %patch2 -p1 -b .locks
+%patch3 -p1 -b .cca-oid
 
 %build
 # Upstream tarball has unnecessary executable perms set on the sources
@@ -130,6 +133,10 @@ exit 0
 
 
 %changelog
+* Mon Feb 17 2014 Petr Lautrbach <plautrba@redhat.com> 2.4.3.1-1.1
+- use correct OID in CKA_ECDSA_PARAMS attribute (#1027606)
+- Resolves: #1027606
+
 * Thu Jul 11 2013 Dan Horák <dhorak@redhat.com> 2.4.3.1-1
 - rebased to 2.4.3.1 (#948349)
 - Resolves: #948349
