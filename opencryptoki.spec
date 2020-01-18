@@ -3,7 +3,7 @@
 Name:			opencryptoki
 Summary:		Implementation of the PKCS#11 (Cryptoki) specification v2.11
 Version:		3.11.0
-Release:		3%{?dist}
+Release:		5%{?dist}
 License:		CPL
 Group:			System Environment/Base
 URL:			https://github.com/opencryptoki/opencryptoki
@@ -21,6 +21,10 @@ Patch3:        opencryptoki-3.11.0-1dae7c15e7bc3bb5b5aad72b851e0b9cd328bb0b.patc
 Patch4:        opencryptoki-3.11.0-covscan.patch
 # bz#1688891, C_EncryptInit fails with CKR_KEY_TYPE_INCONSISTENT. on ep11 token when using imported RSA public key
 Patch5:        opencryptoki-3.11.0-bedf46da28da6231607a12e35414cd59b4432f9f.patch
+# bz#1766090, EP11: Support tolerated new crypto cards
+Patch6:        opencryptoki-3.11.0-d6ba9ff61743ce869a5a677f6f77339642efef.patch
+# bz#1769258 - ICA HW token missing after the package update 
+Patch7:        opencryptoki-3.11.1-use-soname.patch
 
 Requires(pre):		shadow-utils coreutils sed
 BuildRequires:		openssl-devel
@@ -193,6 +197,8 @@ configured with Enterprise PKCS#11 (EP11) firmware.
 %patch3 -p1 -b .EP11_token_fails_when_using_Strict-Session_mode_or_VHSM-Mode
 %patch4 -p1 -b .coverity
 %patch5 -p1 -b .created-MACed-SPKIs-when-importing-public-keys
+%patch6 -p1 -b .support-tolerated-new-crypto-cards
+%patch7 -p1 -b .soname
 
 # Upstream tarball has unnecessary executable perms set on the sources
 find . -name '*.[ch]' -print0 | xargs -0 chmod -x
@@ -347,6 +353,12 @@ fi
 
 
 %changelog
+* Wed Nov 06 2019 Than Ngo <than@redhat.com> - 3.11.0-5
+- Resolves: #1769258, ICA HW token missing after the package update
+
+* Mon Oct 28 2019 Than Ngo <than@redhat.com> - 3.11.0-4
+- Resolves: #1766090, EP11: Support tolerated new crypto cards
+
 * Thu Mar 14 2019 Than Ngo <than@redhat.com> - 3.11.0-3
 - Resolves: #1688891 - C_EncryptInit fails with CKR_KEY_TYPE_INCONSISTENT. on ep11 token when using imported RSA public key
 
