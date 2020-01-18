@@ -2,29 +2,18 @@
 
 Name:			opencryptoki
 Summary:		Implementation of the PKCS#11 (Cryptoki) specification v2.11
-Version:		3.11.0
-Release:		5%{?dist}
+Version:		3.6.2
+Release:		1%{?dist}
 License:		CPL
 Group:			System Environment/Base
-URL:			https://github.com/opencryptoki/opencryptoki
-Source0:		https://github.com/opencryptoki/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
-
+URL:			http://sourceforge.net/projects/opencryptoki
+Source0:		http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source1:		%{name}-tmpfiles.conf
+# do not install pkcsep11_migrate.1 and pkcscca.1 when it's not enabled
 # https://bugzilla.redhat.com/show_bug.cgi?id=732756
-Patch0:        opencryptoki-3.11.0-group.patch
-# bz#1373833, change tmpfiles snippets from /var/lock/* to /run/lock/*
-Patch1:        opencryptoki-3.11.0-lockdir.patch
-# bz#1063763, inform the user that he is not in pkcs11 group
-Patch2:        opencryptoki-3.11.0-warn-user-not-in-pkcs11-group.patch
-# EP11 token fails when using Strict-Session mode or VHSM-Mode
-Patch3:        opencryptoki-3.11.0-1dae7c15e7bc3bb5b5aad72b851e0b9cd328bb0b.patch
-# coverity issues
-Patch4:        opencryptoki-3.11.0-covscan.patch
-# bz#1688891, C_EncryptInit fails with CKR_KEY_TYPE_INCONSISTENT. on ep11 token when using imported RSA public key
-Patch5:        opencryptoki-3.11.0-bedf46da28da6231607a12e35414cd59b4432f9f.patch
-# bz#1766090, EP11: Support tolerated new crypto cards
-Patch6:        opencryptoki-3.11.0-d6ba9ff61743ce869a5a677f6f77339642efef.patch
-# bz#1769258 - ICA HW token missing after the package update 
-Patch7:        opencryptoki-3.11.1-use-soname.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1122505#c8
+Patch0:			%{name}-3.4-fix-root-checks.patch
+Patch1:			%{name}-3.2-conditional-manpages.patch
 
 Requires(pre):		shadow-utils coreutils sed
 BuildRequires:		openssl-devel
@@ -33,7 +22,6 @@ BuildRequires:		openldap-devel
 BuildRequires:		autoconf automake libtool
 BuildRequires:		bison flex
 BuildRequires:		systemd
-BuildRequires:		libitm-devel
 %ifarch s390 s390x
 BuildRequires:		libica-devel >= 2.5
 %endif
@@ -191,17 +179,23 @@ configured with Enterprise PKCS#11 (EP11) firmware.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1 -b .group
-%patch1 -p1 -b .lockdir
-%patch2 -p1 -b .warn-user-not-in-pkcs11-group
-%patch3 -p1 -b .EP11_token_fails_when_using_Strict-Session_mode_or_VHSM-Mode
-%patch4 -p1 -b .coverity
-%patch5 -p1 -b .created-MACed-SPKIs-when-importing-public-keys
-%patch6 -p1 -b .support-tolerated-new-crypto-cards
-%patch7 -p1 -b .soname
+%patch0 -p1 -b .fix-root
+%patch1 -p1 -b .man
 
 # Upstream tarball has unnecessary executable perms set on the sources
 find . -name '*.[ch]' -print0 | xargs -0 chmod -x
+
+# append token specific subdirs to tmpfiles.d config
+token_subdirs="icsf swtok tpm"
+%ifarch s390 s390x
+token_subdirs="$token_subdirs lite ccatok ep11tok"
+%endif
+
+cp -p %{SOURCE1} %{name}-tmpfiles.conf
+for d in $token_subdirs
+do
+    echo "D /var/lock/opencryptoki/$d 0770 root pkcs11 -" >> %{name}-tmpfiles.conf
+done
 
 %build
 ./bootstrap.sh
@@ -223,6 +217,9 @@ make install DESTDIR=$RPM_BUILD_ROOT CHGRP=/bin/true
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{name}/*.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{name}/stdll/*.la
 
+# systemd must create /var/lock/opencryptoki
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
+install -m 0644 %{name}-tmpfiles.conf $RPM_BUILD_ROOT%{_tmpfilesdir}/%{name}.conf
 
 
 %post libs -p /sbin/ldconfig
@@ -251,9 +248,6 @@ exit 0
 
 %post
 %systemd_post pkcsslotd.service
-if test $1 -eq 1; then
-    %tmpfiles_create
-fi
 
 %preun
 %systemd_preun pkcsslotd.service
@@ -263,8 +257,8 @@ fi
 
 
 %files
-%doc ChangeLog FAQ README.md
-%doc doc/opencryptoki-howto.md
+%doc ChangeLog FAQ README
+%doc doc/openCryptoki-HOWTO.pdf
 %doc doc/README.token_data
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
@@ -279,8 +273,8 @@ fi
 %{_libdir}/opencryptoki/methods
 %{_libdir}/pkcs11/methods
 %dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}
-%ghost %dir %attr(770,root,pkcs11) %{_rundir}/lock/%{name}
-%ghost %dir %attr(770,root,pkcs11) %{_rundir}/lock/%{name}/*
+%dir %attr(770,root,pkcs11) %{_localstatedir}/lock/%{name}
+%dir %attr(770,root,pkcs11) %{_localstatedir}/lock/%{name}/*
 %dir %attr(770,root,pkcs11) %{_localstatedir}/log/opencryptoki
 
 %files libs
@@ -329,6 +323,7 @@ fi
 %dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/lite/TOK_OBJ/
 
 %files ccatok
+%doc doc/README-IBM_CCA_users
 %doc doc/README.cca_stdll
 %{_sbindir}/pkcscca
 %{_mandir}/man1/pkcscca.1*
@@ -340,11 +335,8 @@ fi
 %files ep11tok
 %doc doc/README.ep11_stdll
 %config(noreplace) %{_sysconfdir}/%{name}/ep11tok.conf
-%config(noreplace) %{_sysconfdir}/%{name}/ep11cpfilter.conf
 %{_sbindir}/pkcsep11_migrate
-%{_sbindir}/pkcsep11_session
 %{_mandir}/man1/pkcsep11_migrate.1.*
-%{_mandir}/man1/pkcsep11_session.1*
 %{_libdir}/opencryptoki/stdll/libpkcs11_ep11.*
 %{_libdir}/opencryptoki/stdll/PKCS11_EP11.so
 %dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}/ep11tok/
@@ -353,39 +345,6 @@ fi
 
 
 %changelog
-* Wed Nov 06 2019 Than Ngo <than@redhat.com> - 3.11.0-5
-- Resolves: #1769258, ICA HW token missing after the package update
-
-* Mon Oct 28 2019 Than Ngo <than@redhat.com> - 3.11.0-4
-- Resolves: #1766090, EP11: Support tolerated new crypto cards
-
-* Thu Mar 14 2019 Than Ngo <than@redhat.com> - 3.11.0-3
-- Resolves: #1688891 - C_EncryptInit fails with CKR_KEY_TYPE_INCONSISTENT. on ep11 token when using imported RSA public key
-
-* Thu Feb 21 2019 Than Ngo <than@redhat.com> - 3.11.0-2
-- Resolves: #1678788 - EP11 token fails when using Strict-Session mode or VHSM-Mode
-
-* Tue Feb 19 2019 Than Ngo <than@redhat.com> - 3.11.0-1
-- Resolves: #1063763 - opencryptoki tools should inform the user that he is not in pkcs11 group 
-- Resolves: #1641027 - enhanced IBM z14 functions
-- Resolves: #1641026 - support m_*Single functions from ep11 lib
-- Resolves: #1641025 - rebase to 3.11.0
-- Resolves: #1519386 - use CPACF hashes in ep11 token
-- Resolves: #1373833 - lock file directory is %%ghost now
-
-* Thu Aug 23 2018 Sinny Kumari <skumari@redhat.com> - 3.10.0-2
-- Resolves: #1613743 - ICA Token specific des3 cbc encrypt failed - token not available
-
-* Fri Jun 22 2018 Sinny Kumari <skumari@redhat.com> - 3.10.0-1
-- Rebase to 3.10.0
-- Resolves: #1519383 - openCryptoki token for EP11 - crucial enhancements for s390x
-- Remove opencryptoki-3.4-fix-root-checks.patch, fixed in 3.9.0
-- Remove opencryptoki-3.2-conditional-manpages.patch, fixed in 3.9.0
-
-* Tue Oct 03 2017 Sinny Kumari <skumari@redhat.com> - 3.7.0-1
-- RHBZ#1456520 - Rebase opencryptoki to 3.7.0
-- Include libitm-devel as BuildRequires
-
 * Mon Feb 20 2017 Sinny Kumari <skumari@redhat.com> - 3.6.2-1
 - Rebase opencryptoki to 3.6.2
 - Remove patches from spec file applied during 3.5 release

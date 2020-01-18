@@ -1,52 +1,30 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_PREREQ([2.69])
-AC_INIT([openCryptoki],[3.11.0],[opencryptoki-tech@lists.sourceforge.net],[],[https://github.com/opencryptoki/opencryptoki])
-AC_CONFIG_SRCDIR([testcases/common/common.c])
+AC_INIT([openCryptoki],[3.6.2],[opencryptoki-tech@lists.sourceforge.net])
 
 dnl Needed for $target!
-AC_CANONICAL_TARGET
+AC_CANONICAL_SYSTEM
 
-AM_INIT_AUTOMAKE([-Wall -Wno-portability foreign subdir-objects])
+AM_INIT_AUTOMAKE([foreign 1.6 subdir-objects])
 
 dnl Checks for header files.
 AC_DISABLE_STATIC
 LT_INIT
 
 AC_HEADER_STDC
-AC_CHECK_HEADER_STDBOOL
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h libintl.h limits.h locale.h malloc.h \
-		  nl_types.h stddef.h sys/file.h sys/socket.h sys/time.h   \
-		  sys/timeb.h syslog.h termios.h])
+AC_CHECK_HEADERS([fcntl.h limits.h strings.h sys/file.h syslog.h unistd.h])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_INLINE
-AC_C_RESTRICT
 AC_C_CONST
 AC_TYPE_UID_T
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
-AC_TYPE_MODE_T
-AC_TYPE_INT8_T
-AC_TYPE_INT16_T
-AC_TYPE_INT32_T
-AC_TYPE_UINT8_T
-AC_TYPE_UINT16_T
-AC_TYPE_UINT32_T
-AC_TYPE_UINT64_T
 AC_STRUCT_TM
-
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
-AC_FUNC_CHOWN
-AC_FUNC_FORK
-AC_FUNC_MALLOC
-AC_FUNC_MKTIME
-AC_FUNC_MMAP
-AC_FUNC_REALLOC
-AC_FUNC_STRERROR_R
-AC_CHECK_FUNCS([atexit ftruncate gettimeofday localtime_r memchr memmove \
-		memset mkdir munmap regcomp select socket strchr strcspn \
-		strdup strerror strncasecmp strrchr strstr strtol strtoul])
+AC_FUNC_MEMCMP
+AC_FUNC_STRFTIME
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([getcwd])
 
 dnl Used in various scripts
 AC_PATH_PROG([ID], [id], [/us/bin/id])
@@ -55,34 +33,10 @@ AC_PATH_PROG([GROUPADD], [groupadd], [/usr/sbin/groupadd])
 AC_PATH_PROG([CAT], [cat], [/bin/cat])
 AC_PATH_PROG([CHMOD], [chmod], [/bin/chmod])
 AC_PATH_PROG([CHGRP], [chgrp], [/bin/chgrp])
-AC_PROG_AWK
-AC_PROG_INSTALL
-AC_PROG_LN_S
-AC_PROG_MAKE_SET
-
+AC_PROG_SED
+AC_PROG_MKDIR_P
 AM_PROG_LEX
-if test "x$LEX" != "xflex"; then
-    AC_MSG_ERROR(['flex' is missing on your system. Please install 'flex'.])
-fi
-
 AC_PROG_YACC
-if test "x$YACC" = "xyacc"; then
-    # AC_PROG_YACC only checks for yacc replacements, not for yacc itself
-    AC_CHECK_PROG([YACC_FOUND], [yacc], [yes], [no])
-    if test "x$YACC_FOUND" = "xno"; then
-        AC_MSG_ERROR(['YACC' program is missing on your system. Please install 'bison'.])
-    fi
-fi
-
-AC_CHECK_LIB([itm], [_ITM_commitTransaction], [itm=yes], [itm=no])
-
-OPENLDAP_LIBS=
-AC_CHECK_HEADERS([lber.h ldap.h],
-                [OPENLDAP_LIBS="-llber -lldap"],
-                [AC_MSG_ERROR([lber.h and ldap.h are missing. Please install
-                              'openldap-devel'.])])
-LIBS="$LIBS $OPENLDAP_LIBS"
-AC_SUBST([OPENLDAP_LIBS])
 
 dnl Define custom variables
 
@@ -126,17 +80,15 @@ dnl --- that it will enable it by default it dependencies are met
 
 dnl --- ICA token
 AC_ARG_ENABLE([icatok],
-	AS_HELP_STRING([--enable-icatok],[build ica token @<:@default=enabled if
-        libica is present@:>@]),
+	AS_HELP_STRING([--enable-icatok],[build ica token @<:@default=enabled if libica is present@:>@]),
 	[],
 	[enable_icatok=check])
 
 dnl --- CCA token
 AC_ARG_ENABLE([ccatok],
-	AS_HELP_STRING([--enable-ccatok],[build cca token (IBM Common Cryptographic
-        Architecture) @<:@default=enabled@:>@]),
+	AS_HELP_STRING([--enable-ccatok],[build cca token (IBM Common Cryptographic Architecture) @<:@default=enabled in s390 arch@:>@]),
 	[],
-	[enable_ccatok=yes])
+	[enable_ccatok=check])
 
 dnl --- software token
 AC_ARG_ENABLE([swtok],
@@ -146,23 +98,19 @@ AC_ARG_ENABLE([swtok],
 
 dnl --- EP11 token
 AC_ARG_ENABLE([ep11tok],
-    AS_HELP_STRING([--enable-ep11tok],[build ep11 token @<:@default=enabled
-        if zcrypt is present@:>@]),
-    [],
-    [enable_ep11tok=check])
+        AS_HELP_STRING([--enable-ep11tok],[build ep11 token @<:@default=enabled@:>@]),
+        [],
+        [enable_ep11tok=check])
 
 dnl --- TPM token
 AC_ARG_ENABLE([tpmtok],
-	AS_HELP_STRING([--enable-tpmtok],[build tpm token (Trusted Platform Module)
-        @<:@default=enabled if TrouSerS is present@:>@]),
+	AS_HELP_STRING([--enable-tpmtok],[build tpm token (Trusted Platform Module) @<:@default=enabled if TrouSerS is present@:>@]),
 	[],
 	[enable_tpmtok=check])
 
 dnl -- icsf token (Integrated Cryptographic Service Facility remote token)
 AC_ARG_ENABLE([icsftok],
-	AS_HELP_STRING([--enable-icsftok],[build icsf token (Integrated
-        Cryptographic Service Facility) @<:@default=enabled if OpenLDAP library
-        is present@:>@]),
+	AS_HELP_STRING([--enable-iscftok],[build icsf token (Integrated Cryptographic Service Facility) @<:@default=enabled if OpenLDAP library is present@:>@]),
 	[],
 	[enable_icsftok=check])
 
@@ -172,19 +120,6 @@ AC_ARG_ENABLE([pkcsep11_migrate],
 	AS_HELP_STRING([--enable-pkcsep11_migrate],[build pkcsep11_migrate (EP11 token key migration tool) @<:@default=enabled if EP11 library is present@:>@]),
 	[],
 	[enable_pkcsep11_migrate=check])
-	
-dnl --- pkcsep11_session
-AC_ARG_ENABLE([pkcsep11_session],
-	AS_HELP_STRING([--enable-pkcsep11_session],[build pkcsep11_session (EP11 token session logout tool) @<:@default=enabled if EP11 library is present@:>@]),
-	[],
-	[enable_pkcsep11_session=check])
-
-dnl --- locking support
-AC_ARG_ENABLE([locks],
-	AS_HELP_STRING([--enable-locks],[build opencryptoki with locks instead of transactional memory @<:@default=disabled@:>@]),
-	[enable_locks=yes],
-	[enable_locks=no])
-
 dnl ---
 dnl --- Check for external software
 dnl --- Define what to check based on enabled features
@@ -194,6 +129,12 @@ AC_ARG_WITH([openssl],
 	AS_HELP_STRING([--with-openssl@<:@=DIR@:>@],[OpenSSL development files location]),
 	[],
 	[with_openssl=check])
+
+dnl --- Openldap development files
+AC_ARG_WITH([openldap],
+	AS_HELP_STRING([--with-openldap@<:@=DIR@:>@],[OpenLDAP development files location]),
+	[],
+	[with_openldap=check])
 
 dnl --- Libica development files
 AC_ARG_WITH([libica],
@@ -287,6 +228,43 @@ if test "x$with_openssl" != "xno"; then
 fi
 AC_SUBST([OPENSSL_CFLAGS])
 AC_SUBST([OPENSSL_LIBS])
+
+dnl --- with_openldap
+OPENLDAP_CFLAGS=
+OPENLDAP_LIBS=
+if test "x$with_openldap" != "xno"; then
+	if test "x$with_openldap" != "xyes" -a "x$with_openldap" != "xcheck"; then
+		OPENLDAP_CFLAGS="-I$with_openldap"
+		OPENLDAP_LIBS="-L$with_openldap"
+	fi
+	old_cflags="$CFLAGS"
+	old_libs="$LIBS"
+	CFLAGS="$CFLAGS $OPENLDAP_CFLAGS"
+	LIBS="$LIBS $OPENLDAP_LIBS"
+	AC_CHECK_HEADER([ldap.h], [], [
+		if test "x$with_openldap" != "xcheck"; then
+			AC_MSG_ERROR([Build with OpenLDAP requested but OpenLDAP headers couldn't be found])
+		fi
+		with_openldap=no
+	])
+	if test "x$with_openldap" != "xno"; then
+		AC_CHECK_LIB([ldap], [ldap_extended_operation_s], [
+			OPENLDAP_LIBS="$OPENLDAP_LIBS -lldap"
+			with_openldap=yes
+			], [
+				if test "x$with_openldap" != "xcheck"; then
+					AC_MSG_ERROR([Build with OpenLDAP requested but OpenLDAP libraries couldn't be found])
+				fi
+				with_openldap=no
+		])
+	fi
+	if test "x$with_openldap" = "xno"; then
+		CFLAGS="$old_cflags"
+		LIBS="$old_libs"
+	fi
+fi
+AC_SUBST([OPENLDAP_CFLAGS])
+AC_SUBST([OPENLDAP_LIBS])
 
 dnl --- with_libica
 LIBICA_CFLAGS=
@@ -412,7 +390,7 @@ dnl - The above may not be necessary since opencryptoki brings this header file 
 		with_xcryptolinz=no
 	])
 	if test "x$with_xcryptolinz" != "xno"; then
-		AC_CHECK_LIB([csulcca], [CSNBKTC],
+		AC_CHECK_LIB([csulsapi], [CSNBKTC],
 			[with_xcryptolinz=yes], [
 				if test "x$with_xcryptolinz" != "xcheck"; then
 					AC_MSG_ERROR([Build with xcryptolinz requested but xcryptolinz libraries couldn't be found])
@@ -476,7 +454,8 @@ if test "x$enable_icatok" = "xyes"; then
 		AC_MSG_ERROR([ica token build requested but libica development files not found])
 		enable_icatok=no
 	fi
-
+fi
+if test "x$enable_icatok" = "xyes"; then
 	if test "x$with_openssl" != "xyes"; then
 		AC_MSG_ERROR([ica token build requested but OpenSSL development files not found])
 		enable_icatok=no
@@ -490,6 +469,11 @@ fi
 AM_CONDITIONAL([ENABLE_ICATOK], [test "x$enable_icatok" = "xyes"])
 
 dnl --- enable_ccatok
+if test "x$enable_ccatok" != "xno"; then
+	enable_ccatok=yes
+else
+	enable_ccatok=no
+fi
 AM_CONDITIONAL([ENABLE_CCATOK], [test "x$enable_ccatok" = "xyes"])
 
 dnl --- enable_swtok
@@ -508,13 +492,11 @@ AM_CONDITIONAL([ENABLE_SWTOK], [test "x$enable_swtok" = "xyes"])
 
 dnl --- enable_ep11tok
 if test "x$enable_ep11tok" = "xyes"; then
+
 	if test "x$with_zcrypt" != "xyes"; then
 		AC_MSG_ERROR([ep11 token build requested but ep11 development files not found])
 		enable_ep11=no
 	fi
-	AC_CHECK_HEADER([ica_api.h], [], [
-		AC_MSG_ERROR([ep11 token build requested but Libica headers couldn't be found])
-	])
 fi
 if test "x$enable_ep11tok" != "xno" -a "x$with_zcrypt" != "xno"; then
         enable_ep11tok=yes
@@ -525,12 +507,16 @@ AM_CONDITIONAL([ENABLE_EP11TOK], [test "x$enable_ep11tok" = "xyes"])
 
 dnl --- enable_icsftok
 if test "x$enable_icsftok" = "xyes"; then
+	if test "x$with_openldap" != "xyes"; then
+		AC_MSG_ERROR([ICSF token build requested but OpenLDAP development files not found])
+		enable_icsftok=no
+	fi
 	if test "x$with_openssl" != "xyes"; then
 		AC_MSG_ERROR([ICSF token build requested but OpenSSL development files not found])
 		enable_icsftok=no
 	fi
 fi
-if test "x$enable_icsftok" != "xno" -a "x$with_openssl" != "xno"; then
+if test "x$enable_icsftok" != "xno" -a "x$with_openldap" != "xno" -a "x$with_openssl" != "xno"; then
 	enable_icsftok=yes
 else
 	enable_icsftok=no
@@ -559,46 +545,16 @@ if test "x$enable_pkcsep11_migrate" = "xyes"; then
 		enable_pkcsep11_migrate=no
 	fi
 fi
+
 if test "x$enable_pkcsep11_migrate" != "xno" -a "x$with_zcrypt" != "xno"; then
         enable_pkcsep11_migrate=yes
 else
         enable_pkcsep11_migrate=no
 fi
+
 AM_CONDITIONAL([ENABLE_PKCSEP11_MIGRATE], [test "x$enable_pkcsep11_migrate" = "xyes"])
 
-dnl --- enable_pkcsep11_session
-if test "x$enable_pkcsep11_session" = "xyes"; then
-	if test "x$with_zcrypt" != "xyes"; then
-		AC_MSG_ERROR([pkcsep11_session build requested but no ep11 libraries found])
-		enable_pkcsep11_session=no
-	fi
-fi
-
-if test "x$enable_pkcsep11_session" != "xno" -a "x$with_zcrypt" != "xno"; then
-        enable_pkcsep11_session=yes
-else
-        enable_pkcsep11_session=no
-fi
-
-AM_CONDITIONAL([ENABLE_PKCSEP11_SESSION], [test "x$enable_pkcsep11_session" = "xyes"])
-
-dnl --- enable_locks
-if test "x$enable_locks" = "xno"; then
-	if test "x$itm" != "xyes"; then
-		AC_MSG_ERROR([in order to build opencryptoki with transactional memory,
-libitm and gcc>=4.7 is required])
-    fi
-fi
-if test "x$enable_locks" != "xno"; then
-        enable_locks=yes
-        CFLAGS="$CFLAGS -DENABLE_LOCKS"
-else
-        enable_locks=no
-        CFLAGS="$CFLAGS -fgnu-tm"
-fi
-AM_CONDITIONAL([ENABLE_LOCKS], [test "x$enable_locks" = "xyes"])
-
-CFLAGS="$CFLAGS -DPKCS64 -D_XOPEN_SOURCE=600 -Wall -Wextra"
+CFLAGS="$CFLAGS -DPKCS64 -D_XOPEN_SOURCE=600 -Wall -Wno-pointer-sign"
 
 CFLAGS+=' -DCONFIG_PATH=\"$(localstatedir)/lib/opencryptoki\" -DSBIN_PATH=\"$(sbindir)\" -DLIB_PATH=\"$(libdir)\" -DLOCKDIR_PATH=\"$(lockdir)\" -DOCK_CONFDIR=\"$(sysconfdir)/opencryptoki\" -DOCK_LOGDIR=\"$(logdir)\"'
 
@@ -607,17 +563,44 @@ AC_PROG_CC
 
 AC_CONFIG_MACRO_DIRS([m4])
 
-AC_CONFIG_FILES([Makefile				\
-		 usr/lib/api/shrd_mem.c			\
-		 man/man1/pkcsconf.1			\
-		 man/man1/pkcsicsf.1			\
-		 man/man1/pkcscca.1			\
-		 man/man1/pkcsep11_migrate.1		\
-		 man/man1/pkcsep11_session.1		\
-		 man/man5/opencryptoki.conf.5		\
-		 man/man7/opencryptoki.7		\
-		 man/man8/pkcsslotd.8])
-
+AC_CONFIG_FILES([Makefile usr/Makefile \
+          usr/include/Makefile \
+          usr/include/pkcs11/Makefile \
+          usr/lib/Makefile \
+          usr/lib/pkcs11/Makefile \
+          usr/lib/pkcs11/api/Makefile \
+          usr/lib/pkcs11/api/shrd_mem.c \
+          usr/lib/pkcs11/ica_s390_stdll/Makefile \
+          usr/sbin/Makefile \
+          usr/sbin/pkcsslotd/Makefile \
+          usr/sbin/pkcsconf/Makefile \
+          usr/sbin/pkcsicsf/Makefile \
+          usr/sbin/pkcscca/Makefile \
+          usr/sbin/pkcsep11_migrate/Makefile \
+          usr/lib/pkcs11/soft_stdll/Makefile \
+          usr/lib/pkcs11/ep11_stdll/Makefile \
+          usr/lib/pkcs11/tpm_stdll/Makefile \
+          usr/lib/pkcs11/cca_stdll/Makefile \
+          usr/lib/pkcs11/icsf_stdll/Makefile \
+          misc/Makefile \
+	  testcases/Makefile \
+	  testcases/common/Makefile \
+	  testcases/crypto/Makefile \
+	  testcases/pkcs11/Makefile \
+	  testcases/login/Makefile \
+	  testcases/misc_tests/Makefile \
+	  man/Makefile \
+	  man/man1/Makefile \
+	  man/man1/pkcsconf.1 \
+	  man/man1/pkcsicsf.1 \
+	  man/man1/pkcscca.1 \
+	  man/man1/pkcsep11_migrate.1 \
+	  man/man5/Makefile \
+	  man/man5/opencryptoki.conf.5 \
+	  man/man7/Makefile \
+	  man/man7/opencryptoki.7 \
+	  man/man8/Makefile \
+	  man/man8/pkcsslotd.8])
 AC_OUTPUT
 
 echo "Enabled features:"
@@ -637,7 +620,6 @@ echo "	ICSF token:		$enable_icsftok"
 echo
 echo "Token-specific features:"
 echo "	pkcsep11migrate build:	$enable_pkcsep11_migrate"
-echo "	pkcsep11session build:	$enable_pkcsep11_session"
 echo
 echo "CFLAGS=$CFLAGS"
 echo

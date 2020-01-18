@@ -1,6 +1,6 @@
 [Unit]
 Description=Daemon which manages cryptographic hardware tokens for the openCryptoki package
-After=local-fs.target
+After=syslog.target
 
 [Service]
 Type=forking

@@ -1,0 +1,13 @@
+diff -up opencryptoki/usr/lib/pkcs11/common/new_host.c.fix-root opencryptoki/usr/lib/pkcs11/common/new_host.c
+diff -up opencryptoki/usr/lib/pkcs11/common/utility.c.fix-root opencryptoki/usr/lib/pkcs11/common/utility.c
+--- opencryptoki/usr/lib/pkcs11/common/utility.c.fix-root	2015-12-04 15:27:56.038413538 +0100
++++ opencryptoki/usr/lib/pkcs11/common/utility.c	2015-12-04 15:28:02.557395798 +0100
+@@ -1122,7 +1122,7 @@ CK_RV check_user_and_group()
+ 	euid = geteuid();
+ 
+ 	/* Root or effective Root is ok */
+-	if (uid == 0 && euid == 0)
++	if (uid == 0 || euid == 0)
+ 		return CKR_OK;
+ 
+ 	/*

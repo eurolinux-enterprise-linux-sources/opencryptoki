@@ -1,10 +1,286 @@
+//
 /*
- * This program is provided under the terms of the Common Public License,
- * version 1.0 (CPL-1.0). Any use, reproduction or distribution for this
- * software constitutes recipient's acceptance of CPL-1.0 terms which can be
- * found in the file LICENSE file or at
- * https://opensource.org/licenses/cpl1.0.php
- */
+             Common Public License Version 0.5
+ 
+             THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF
+             THIS COMMON PUBLIC LICENSE ("AGREEMENT"). ANY USE,
+             REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES
+             RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
+ 
+             1. DEFINITIONS
+ 
+             "Contribution" means:
+                   a) in the case of the initial Contributor, the
+                   initial code and documentation distributed under
+                   this Agreement, and
+ 
+                   b) in the case of each subsequent Contributor:
+                   i) changes to the Program, and
+                   ii) additions to the Program;
+ 
+                   where such changes and/or additions to the Program
+                   originate from and are distributed by that
+                   particular Contributor. A Contribution 'originates'
+                   from a Contributor if it was added to the Program
+                   by such Contributor itself or anyone acting on such
+                   Contributor's behalf. Contributions do not include
+                   additions to the Program which: (i) are separate
+                   modules of software distributed in conjunction with
+                   the Program under their own license agreement, and
+                   (ii) are not derivative works of the Program.
+ 
+ 
+             "Contributor" means any person or entity that distributes
+             the Program.
+ 
+             "Licensed Patents " mean patent claims licensable by a
+             Contributor which are necessarily infringed by the use or
+             sale of its Contribution alone or when combined with the
+             Program.
+ 
+             "Program" means the Contributions distributed in
+             accordance with this Agreement.
+             "Recipient" means anyone who receives the Program under
+             this Agreement, including all Contributors.
+ 
+             2. GRANT OF RIGHTS
+ 
+                   a) Subject to the terms of this Agreement, each
+                   Contributor hereby grants Recipient a
+                   non-exclusive, worldwide, royalty-free copyright
+                   license to reproduce, prepare derivative works of,
+                   publicly display, publicly perform, distribute and
+                   sublicense the Contribution of such Contributor, if
+                   any, and such derivative works, in source code and
+                   object code form.
+ 
+                   b) Subject to the terms of this Agreement, each
+                   Contributor hereby grants Recipient a
+                   non-exclusive, worldwide, royalty-free patent
+                   license under Licensed Patents to make, use, sell,
+                   offer to sell, import and otherwise transfer the
+                   Contribution of such Contributor, if any, in source
+                   code and object code form. This patent license
+                   shall apply to the combination of the Contribution
+                   and the Program if, at the time the Contribution is
+                   added by the Contributor, such addition of the
+                   Contribution causes such combination to be covered
+                   by the Licensed Patents. The patent license shall
+                   not apply to any other combinations which include
+                   the Contribution. No hardware per se is licensed
+                   hereunder.
+ 
+                   c) Recipient understands that although each
+                   Contributor grants the licenses to its
+                   Contributions set forth herein, no assurances are
+                   provided by any Contributor that the Program does
+                   not infringe the patent or other intellectual
+                   property rights of any other entity. Each
+                   Contributor disclaims any liability to Recipient
+                   for claims brought by any other entity based on
+                   infringement of intellectual property rights or
+                   otherwise. As a condition to exercising the rights
+                   and licenses granted hereunder, each Recipient
+                   hereby assumes sole responsibility to secure any
+                   other intellectual property rights needed, if any.
+
+                   For example, if a third party patent license is
+                   required to allow Recipient to distribute the
+                   Program, it is Recipient's responsibility to
+                   acquire that license before distributing the
+                   Program.
+ 
+                   d) Each Contributor represents that to its
+                   knowledge it has sufficient copyright rights in its
+                   Contribution, if any, to grant the copyright
+                   license set forth in this Agreement.
+ 
+             3. REQUIREMENTS
+ 
+             A Contributor may choose to distribute the Program in
+             object code form under its own license agreement, provided
+             that:
+                   a) it complies with the terms and conditions of
+                   this Agreement; and
+ 
+                   b) its license agreement:
+                   i) effectively disclaims on behalf of all
+                   Contributors all warranties and conditions, express
+                   and implied, including warranties or conditions of
+                   title and non-infringement, and implied warranties
+                   or conditions of merchantability and fitness for a
+                   particular purpose;
+ 
+                   ii) effectively excludes on behalf of all
+                   Contributors all liability for damages, including
+                   direct, indirect, special, incidental and
+                   consequential damages, such as lost profits;
+ 
+                   iii) states that any provisions which differ from
+                   this Agreement are offered by that Contributor
+                   alone and not by any other party; and
+ 
+                   iv) states that source code for the Program is
+                   available from such Contributor, and informs
+                   licensees how to obtain it in a reasonable manner
+                   on or through a medium customarily used for
+                   software exchange.
+
+             When the Program is made available in source code form:
+                   a) it must be made available under this Agreement;
+                   and
+                   b) a copy of this Agreement must be included with
+                   each copy of the Program.
+ 
+             Contributors may not remove or alter any copyright notices
+             contained within the Program.
+ 
+             Each Contributor must identify itself as the originator of
+             its Contribution, if any, in a manner that reasonably
+             allows subsequent Recipients to identify the originator of
+             the Contribution.
+ 
+ 
+             4. COMMERCIAL DISTRIBUTION
+ 
+             Commercial distributors of software may accept certain
+             responsibilities with respect to end users, business
+             partners and the like. While this license is intended to
+             facilitate the commercial use of the Program, the
+             Contributor who includes the Program in a commercial
+             product offering should do so in a manner which does not
+             create potential liability for other Contributors.
+             Therefore, if a Contributor includes the Program in a
+             commercial product offering, such Contributor ("Commercial
+             Contributor") hereby agrees to defend and indemnify every
+             other Contributor ("Indemnified Contributor") against any
+             losses, damages and costs (collectively "Losses") arising
+             from claims, lawsuits and other legal actions brought by a
+             third party against the Indemnified Contributor to the
+             extent caused by the acts or omissions of such Commercial
+             Contributor in connection with its distribution of the
+             Program in a commercial product offering. The obligations
+             in this section do not apply to any claims or Losses
+             relating to any actual or alleged intellectual property
+             infringement. In order to qualify, an Indemnified
+             Contributor must: a) promptly notify the Commercial
+             Contributor in writing of such claim, and b) allow the
+             Commercial Contributor to control, and cooperate with the
+             Commercial Contributor in, the defense and any related
+             settlement negotiations. The Indemnified Contributor may
+             participate in any such claim at its own expense.
+
+             For example, a Contributor might include the Program in a
+             commercial product offering, Product X. That Contributor
+             is then a Commercial Contributor. If that Commercial
+             Contributor then makes performance claims, or offers
+             warranties related to Product X, those performance claims
+             and warranties are such Commercial Contributor's
+             responsibility alone. Under this section, the Commercial
+             Contributor would have to defend claims against the other
+             Contributors related to those performance claims and
+             warranties, and if a court requires any other Contributor
+             to pay any damages as a result, the Commercial Contributor
+             must pay those damages.
+ 
+ 
+             5. NO WARRANTY
+ 
+             EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE
+             PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT
+             WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+             IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR
+             CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR
+             FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is solely
+             responsible for determining the appropriateness of using
+             and distributing the Program and assumes all risks
+             associated with its exercise of rights under this
+             Agreement, including but not limited to the risks and
+             costs of program errors, compliance with applicable laws,
+             damage to or loss of data, programs or equipment, and
+             unavailability or interruption of operations.
+ 
+             6. DISCLAIMER OF LIABILITY
+             EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER
+             RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY
+             FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+             OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION
+             LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF
+             LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+             (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+             OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE
+             OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE
+             POSSIBILITY OF SUCH DAMAGES.
+
+             7. GENERAL
+ 
+             If any provision of this Agreement is invalid or
+             unenforceable under applicable law, it shall not affect
+             the validity or enforceability of the remainder of the
+             terms of this Agreement, and without further action by the
+             parties hereto, such provision shall be reformed to the
+             minimum extent necessary to make such provision valid and
+             enforceable.
+ 
+ 
+             If Recipient institutes patent litigation against a
+             Contributor with respect to a patent applicable to
+             software (including a cross-claim or counterclaim in a
+             lawsuit), then any patent licenses granted by that
+             Contributor to such Recipient under this Agreement shall
+             terminate as of the date such litigation is filed. In
+             addition, If Recipient institutes patent litigation
+             against any entity (including a cross-claim or
+             counterclaim in a lawsuit) alleging that the Program
+             itself (excluding combinations of the Program with other
+             software or hardware) infringes such Recipient's
+             patent(s), then such Recipient's rights granted under
+             Section 2(b) shall terminate as of the date such
+             litigation is filed.
+ 
+             All Recipient's rights under this Agreement shall
+             terminate if it fails to comply with any of the material
+             terms or conditions of this Agreement and does not cure
+             such failure in a reasonable period of time after becoming
+             aware of such noncompliance. If all Recipient's rights
+             under this Agreement terminate, Recipient agrees to cease
+             use and distribution of the Program as soon as reasonably
+             practicable. However, Recipient's obligations under this
+             Agreement and any licenses granted by Recipient relating
+             to the Program shall continue and survive.
+ 
+             Everyone is permitted to copy and distribute copies of
+             this Agreement, but in order to avoid inconsistency the
+             Agreement is copyrighted and may only be modified in the
+             following manner. The Agreement Steward reserves the right
+             to publish new versions (including revisions) of this
+             Agreement from time to time. No one other than the
+             Agreement Steward has the right to modify this Agreement.
+
+             IBM is the initial Agreement Steward. IBM may assign the
+             responsibility to serve as the Agreement Steward to a
+             suitable separate entity. Each new version of the
+             Agreement will be given a distinguishing version number.
+             The Program (including Contributions) may always be
+             distributed subject to the version of the Agreement under
+             which it was received. In addition, after a new version of
+             the Agreement is published, Contributor may elect to
+             distribute the Program (including its Contributions) under
+             the new version. Except as expressly stated in Sections
+             2(a) and 2(b) above, Recipient receives no rights or
+             licenses to the intellectual property of any Contributor
+             under this Agreement, whether expressly, by implication,
+             estoppel or otherwise. All rights in the Program not
+             expressly granted under this Agreement are reserved.
+ 
+             This Agreement is governed by the laws of the State of New
+             York and the intellectual property laws of the United
+             States of America. No party to this Agreement will bring a
+             legal action under this Agreement more than one year after
+             the cause of action arose. Each party waives its rights to
+             a jury trial in any resulting litigation.
+ 
+*/
 
 /************************************************************************
 *                                                                       *
@@ -34,583 +310,449 @@
 #include "common.c"
 
 
-// These values were obtained from openssl genkey.
+// These values were obtained from IPsec second oakley group.
 // These values are in big-endian format.
 // These are required for generating DH keys and secrets.
 
+CK_BYTE DH_PUBL_PRIME[128] =  {	0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xC9,
+				0x0F,0xDA,0xA2,0x21,0x68,0xC2,0x34,0xC4,0xC6,
+				0x62,0x8B,0x80,0xDC,0x1C,0xD1,0x29,0x02,0x4E,
+				0x08,0x8A,0x67,0xCC,0x74,0x02,0x0B,0xBE,0xA6,
+				0x3B,0x13,0x9B,0x22,0x51,0x4A,0x08,0x79,0x8E,
+				0x34,0x04,0xDD,0xEF,0x95,0x19,0xB3,0xCD,0x3A,
+				0x43,0x1B,0x30,0x2B,0x0A,0x6D,0xF2,0x5F,0x14,
+				0x37,0x4F,0xE1,0x35,0x6D,0x6D,0x51,0xC2,0x45,
+				0xE4,0x85,0xB5,0x76,0x62,0x5E,0x7E,0xC6,0xF4,
+				0x4C,0x42,0xE9,0xA6,0x37,0xED,0x6B,0x0B,0xFF,
+				0x5C,0xB6,0xF4,0x06,0xB7,0xED,0xEE,0x38,0x6B,
+				0xFB,0x5A,0x89,0x9F,0xA5,0xAE,0x9F,0x24,0x11,
+				0x7C,0x4B,0x1F,0xE6,0x49,0x28,0x66,0x51,0xEC,
+				0xE6,0x53,0x81,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+				0xFF,0xFF };
 
-CK_BYTE DH_PUBL_PRIME[128] = {
-    0xd5, 0xb1, 0xaa, 0x6a, 0x3b, 0x85, 0x50, 0xf0, 0xe2,
-    0xea, 0x6b, 0xec, 0x26, 0x3b, 0xe0, 0xbf, 0x7a, 0x82,
-    0x45, 0x1b, 0xa8, 0x0a, 0x54, 0x2e, 0x14, 0x2c, 0xc2,
-    0x58, 0xb1, 0xf5, 0x59, 0xec, 0x7d, 0x16, 0x9e, 0x00,
-    0x62, 0xb3, 0xa7, 0xdc, 0x38, 0x6f, 0x64, 0x40, 0xfc,
-    0x0d, 0x3e, 0x0b, 0x66, 0x13, 0x5e, 0xa5, 0x84, 0x90,
-    0x26, 0x62, 0xcf, 0x5a, 0x14, 0x72, 0x2d, 0x1b, 0x37,
-    0x7e, 0x8a, 0x4b, 0xc0, 0xb7, 0xf2, 0x63, 0xd1, 0xaa,
-    0x51, 0x92, 0x96, 0x18, 0xae, 0xb9, 0xfd, 0x5f, 0x9d,
-    0x5d, 0xdf, 0x75, 0xa9, 0x80, 0x3d, 0xaa, 0xc2, 0x54,
-    0x00, 0xcc, 0xc1, 0x9e, 0x31, 0x4d, 0x22, 0x31, 0x44,
-    0xe9, 0x69, 0x34, 0xae, 0xcf, 0xcd, 0x6d, 0xf6, 0xe9,
-    0x37, 0x20, 0xa4, 0xd3, 0x85, 0x24, 0xff, 0x9f, 0x39,
-    0xeb, 0x78, 0xf2, 0xd1, 0xc3, 0xf9, 0x66, 0xab, 0xbd,
-    0x2d, 0xd3
-};
-
-
-CK_BYTE DH_PUBL_BASE[128] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x02
-};
-
-CK_BYTE DH_PRIVATE_A[128] = {
-    0x69, 0xd1, 0xfd, 0xaf, 0x5f, 0x00, 0x75, 0x0e, 0x85,
-    0xfe, 0xc1, 0x8d, 0x5f, 0x0e, 0x86, 0x3f, 0xfa, 0xe0,
-    0xef, 0x19, 0x8b, 0xfd, 0x90, 0xe5, 0x8e, 0xd7, 0xc6,
-    0x5f, 0xd7, 0x37, 0x20, 0x15, 0xc6, 0x65, 0x6c, 0x9b,
-    0xdd, 0xb7, 0x50, 0xda, 0x5e, 0xf0, 0xb9, 0x9f, 0x5d,
-    0x9b, 0x06, 0xdf, 0x10, 0xf0, 0x60, 0x74, 0x8e, 0x71,
-    0xb5, 0x4b, 0x6f, 0xdf, 0x0b, 0x86, 0x36, 0x54, 0x3d,
-    0x95, 0x17, 0x38, 0x27, 0x6f, 0xb7, 0x32, 0x57, 0x2b,
-    0x72, 0xc6, 0x9e, 0x81, 0x52, 0x8f, 0xcd, 0x43, 0x6f,
-    0x9c, 0x6b, 0xee, 0x58, 0x00, 0x8c, 0xb5, 0xff, 0x94,
-    0xfe, 0xbc, 0x2b, 0xd0, 0xab, 0x97, 0x90, 0x7c, 0x2c,
-    0xbf, 0xf9, 0x19, 0xa8, 0x19, 0x82, 0xff, 0xf4, 0xc4,
-    0xd0, 0x02, 0x01, 0xb7, 0xd5, 0x4b, 0x00, 0x6d, 0x69,
-    0x1e, 0xfc, 0x7a, 0x9f, 0xc0, 0x3f, 0x38, 0x8b, 0xb3,
-    0xc6, 0x89
-};
-
-CK_BYTE DH_PUBLIC_A[128] = {
-    0x89, 0x5b, 0xfe, 0x83, 0xdd, 0x18, 0x69, 0x47, 0x86,
-    0x28, 0x17, 0x86, 0xba, 0x8f, 0x47, 0x27, 0x3c, 0xe6,
-    0x0e, 0x21, 0xac, 0x4f, 0x7f, 0xc4, 0x25, 0xaa, 0x52,
-    0x86, 0x26, 0x07, 0xc6, 0x2d, 0x2e, 0xbe, 0xfc, 0xb5,
-    0x97, 0xa9, 0x73, 0x57, 0x20, 0x11, 0x77, 0x0a, 0xef,
-    0x3e, 0x55, 0x56, 0x29, 0x2b, 0xc3, 0x7f, 0x87, 0x9d,
-    0x0f, 0x08, 0xd4, 0x4c, 0x46, 0x7a, 0x37, 0xba, 0xb7,
-    0x3d, 0x47, 0xce, 0x70, 0x94, 0x9c, 0xa6, 0x59, 0x61,
-    0xf7, 0x98, 0x15, 0x33, 0x7e, 0x6a, 0x25, 0x66, 0x1f,
-    0x18, 0x88, 0x5a, 0x02, 0xfa, 0x69, 0xa5, 0x8e, 0x1b,
-    0x9e, 0x2f, 0xcb, 0x2b, 0x28, 0x56, 0x8d, 0xcd, 0x92,
-    0xea, 0xf0, 0x9d, 0x37, 0x9b, 0xa3, 0x92, 0x5b, 0x9c,
-    0x10, 0x02, 0x7d, 0x57, 0xe9, 0xd7, 0x8d, 0x6e, 0x13,
-    0x5e, 0x34, 0x9e, 0x8c, 0x15, 0x4e, 0x0f, 0xe2, 0x28,
-    0x70, 0x3d
-};
-
-CK_BYTE DH_PRIVATE_B[128] = {
-    0x71, 0x07, 0xa2, 0x3c, 0x08, 0x08, 0x5c, 0x47, 0x6e,
-    0x2d, 0x70, 0xf5, 0x8c, 0xb1, 0xc0, 0xc6, 0x2b, 0xdf,
-    0xa7, 0x23, 0x68, 0xcf, 0x84, 0x34, 0x88, 0xb5, 0x0a,
-    0x99, 0xc2, 0x7b, 0x08, 0x1f, 0xe8, 0x83, 0x8d, 0x27,
-    0x76, 0x28, 0x7c, 0xb8, 0x72, 0xf1, 0x17, 0x99, 0x87,
-    0xe3, 0xaa, 0x97, 0xa9, 0x0f, 0x92, 0xa1, 0xe3, 0x6f,
-    0x6b, 0x53, 0xff, 0xd1, 0x25, 0x83, 0xb0, 0xca, 0x07,
-    0x32, 0x48, 0x72, 0xf3, 0xe5, 0xb4, 0xaf, 0x82, 0x6b,
-    0x90, 0x0d, 0x32, 0x46, 0x07, 0x1b, 0x4b, 0x97, 0x73,
-    0xbb, 0x4d, 0x57, 0x4e, 0x38, 0x7d, 0x59, 0xd6, 0xd5,
-    0xb1, 0xbd, 0x93, 0x85, 0x15, 0xa1, 0x14, 0x98, 0xb7,
-    0xe6, 0x7f, 0x8a, 0xf1, 0xbd, 0x1a, 0x88, 0x4a, 0x1b,
-    0xa8, 0x3f, 0xc9, 0x1f, 0x9a, 0xbe, 0x33, 0x27, 0x79,
-    0xd6, 0xeb, 0x45, 0xda, 0xc9, 0x5f, 0x59, 0xe8, 0xeb,
-    0x79, 0xc7
-};
-
-CK_BYTE DH_PUBLIC_B[128] = {
-    0xc5, 0xe3, 0xec, 0x7c, 0x29, 0x67, 0x4e, 0x61, 0x54,
-    0xd6, 0xbb, 0xba, 0x23, 0xc3, 0xc9, 0x69, 0x05, 0x73,
-    0x00, 0x8e, 0xa6, 0x79, 0x5b, 0x58, 0x35, 0x69, 0x70,
-    0x0d, 0xd3, 0x42, 0xa2, 0x0c, 0xfa, 0x1e, 0x3d, 0x5a,
-    0x5e, 0x21, 0x6c, 0x0e, 0x34, 0xb0, 0xd9, 0x1a, 0xb2,
-    0x10, 0xa4, 0x0c, 0xf4, 0xb1, 0xfa, 0x2c, 0x40, 0x09,
-    0xbe, 0x92, 0xf9, 0x70, 0xbe, 0x49, 0x79, 0xe0, 0x20,
-    0xfc, 0x10, 0xa7, 0xda, 0xaa, 0xb6, 0x0c, 0x3b, 0xd4,
-    0x6f, 0x51, 0x42, 0xfd, 0xf6, 0x08, 0x08, 0x4a, 0x0c,
-    0xf8, 0xdb, 0xc1, 0x7b, 0x61, 0x36, 0x1c, 0x10, 0xc3,
-    0x2c, 0x1a, 0x3b, 0xcb, 0xda, 0xae, 0x45, 0xfd, 0x0a,
-    0xd7, 0x50, 0xc3, 0xf1, 0xfc, 0xfa, 0xeb, 0xc2, 0x64,
-    0x18, 0xce, 0x4d, 0xd1, 0xd3, 0xfd, 0x1f, 0x31, 0x30,
-    0x11, 0xe8, 0xaa, 0x40, 0xa4, 0xb8, 0x1d, 0xba, 0x24,
-    0xf2, 0x75
-};
+CK_BYTE DH_PUBL_BASE[128] =   {	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x02 };
 
 /*
- * Generate/Import DH key-pairs for parties A and B.
+ * Generate DH key-pairs for parties A and B.
  * Derive keys based on Diffie Hellman key agreement defined in PKCS#3.
  *
  */
-CK_RV do_DeriveDHKey(CK_BBOOL do_import)
+CK_RV do_DeriveDHKey(void)
 {
-    CK_SESSION_HANDLE session;
-    CK_MECHANISM mech;
-    CK_OBJECT_HANDLE publ_key = CK_INVALID_HANDLE;
-    CK_OBJECT_HANDLE priv_key = CK_INVALID_HANDLE;
-    CK_OBJECT_HANDLE peer_publ_key = CK_INVALID_HANDLE;
-    CK_OBJECT_HANDLE peer_priv_key = CK_INVALID_HANDLE;
-    CK_OBJECT_HANDLE secret_key = CK_INVALID_HANDLE;
-    CK_OBJECT_HANDLE peer_secret_key = CK_INVALID_HANDLE;
-    CK_FLAGS flags;
-    CK_BYTE user_pin[PKCS11_MAX_PIN_LEN];
-    CK_ULONG user_pin_len;
-    CK_RV rc = CKR_OK, loc_rc = CKR_OK;
+	CK_SESSION_HANDLE   session;
+	CK_MECHANISM        mech;
+	CK_OBJECT_HANDLE    publ_key, priv_key;
+	CK_OBJECT_HANDLE    peer_publ_key, peer_priv_key;
+	CK_OBJECT_HANDLE    secret_key, peer_secret_key;
+	CK_FLAGS            flags;
+	CK_BYTE             user_pin[PKCS11_MAX_PIN_LEN];
+	CK_ULONG            user_pin_len;
+	CK_RV               rc = CKR_OK, loc_rc = CKR_OK;
 
-    int i = 0;
-    CK_BYTE clear[32];
-    CK_BYTE cipher[32];
-    CK_BYTE re_cipher[32];
-    CK_ULONG cipher_len = 32;
-    CK_ULONG re_cipher_len = 32;
-    CK_BBOOL ltrue = 1;
+	int i = 0;
+	CK_BYTE clear    [32];
+	CK_BYTE cipher   [32];
+	CK_BYTE re_cipher[32];
+	CK_ULONG cipher_len = 32;
+	CK_ULONG re_cipher_len = 32;
+	CK_BBOOL ltrue = 1;
 
-    CK_OBJECT_CLASS pub_key_class = CKO_PUBLIC_KEY;
-    CK_KEY_TYPE key_type = CKK_DH;
-    CK_UTF8CHAR publ_label[] = "A DH public key object";
-    CK_OBJECT_CLASS priv_key_class = CKO_PRIVATE_KEY;
-    CK_UTF8CHAR priv_label[] = "A DH private key object";
+	CK_OBJECT_CLASS     pub_key_class  = CKO_PUBLIC_KEY ;
+	CK_KEY_TYPE         key_type   = CKK_DH ;
+	CK_UTF8CHAR	    publ_label[] = "A DH public key object";
+	CK_OBJECT_CLASS     priv_key_class = CKO_PRIVATE_KEY ;
+        CK_UTF8CHAR	    priv_label[] = "A DH private key object";
 
-    CK_ULONG secret_key_size = sizeof(DH_PUBL_PRIME);
-    CK_OBJECT_CLASS secret_key_class = CKO_SECRET_KEY;
-    CK_KEY_TYPE secret_key_type = CKK_GENERIC_SECRET;
-    CK_UTF8CHAR secret_label[] = "A generic secret key object";
+	CK_ULONG secret_key_size = sizeof(DH_PUBL_PRIME);
+	CK_OBJECT_CLASS secret_key_class = CKO_SECRET_KEY;
+	CK_KEY_TYPE secret_key_type = CKK_GENERIC_SECRET;
+	CK_UTF8CHAR secret_label[] = "A generic secret key object";
 
-    CK_BYTE key1_value[sizeof(DH_PUBL_PRIME) * 2];
-    CK_BYTE key2_value[sizeof(DH_PUBL_PRIME) * 2];
+	CK_BYTE key1_value[sizeof(DH_PUBL_PRIME)*2];
+	CK_BYTE key2_value[sizeof(DH_PUBL_PRIME)*2];
 
-    CK_ATTRIBUTE publ_tmpl[] = {
-        {CKA_CLASS, &pub_key_class, sizeof(pub_key_class)},
-        {CKA_KEY_TYPE, &key_type, sizeof(key_type)},
-        {CKA_LABEL, publ_label, sizeof(publ_label) - 1},
-        {CKA_PRIME, DH_PUBL_PRIME, sizeof(DH_PUBL_PRIME)},
-        {CKA_BASE, DH_PUBL_BASE, sizeof(DH_PUBL_BASE)}
-    };
+	CK_ATTRIBUTE  publ_tmpl[] =
+	{
+		{CKA_CLASS, &pub_key_class, sizeof(pub_key_class)},
+		{CKA_KEY_TYPE, &key_type, sizeof(key_type)},
+		{CKA_LABEL, publ_label, sizeof(publ_label)-1},
+		{CKA_PRIME, DH_PUBL_PRIME, sizeof(DH_PUBL_PRIME)},
+		{CKA_BASE, DH_PUBL_BASE, sizeof(DH_PUBL_BASE)}
+	};
 
-    CK_ATTRIBUTE priv_tmpl[] = {
-        {CKA_CLASS, &priv_key_class, sizeof(priv_key_class)},
-        {CKA_KEY_TYPE, &key_type, sizeof(key_type)},
-        {CKA_LABEL, priv_label, sizeof(priv_label) - 1},
-        {CKA_DERIVE, &ltrue, sizeof(ltrue)}
-    };
+	CK_ATTRIBUTE  priv_tmpl[] =
+	{
+		{CKA_CLASS, &priv_key_class, sizeof(priv_key_class)},
+		{CKA_KEY_TYPE, &key_type, sizeof(key_type)},
+		{CKA_LABEL, priv_label, sizeof(priv_label)-1},
+		{CKA_DERIVE, &ltrue, sizeof(ltrue) }
+	};
 
-    CK_ATTRIBUTE secret_tmpl[] = {
-        {CKA_CLASS, &secret_key_class, sizeof(secret_key_class)},
-        {CKA_KEY_TYPE, &secret_key_type, sizeof(secret_key_type)},
-        {CKA_VALUE_LEN, &secret_key_size, sizeof(secret_key_size)},
-        {CKA_LABEL, secret_label, sizeof(secret_label) - 1}
-    };
+	CK_ATTRIBUTE  secret_tmpl[] =
+	{
+		{CKA_CLASS, &secret_key_class, sizeof(secret_key_class)},
+		{CKA_KEY_TYPE, &secret_key_type, sizeof(secret_key_type)},
+		{CKA_VALUE_LEN, &secret_key_size, sizeof(secret_key_size)},
+		{CKA_LABEL, secret_label, sizeof(secret_label)-1}
+	};
 
-    CK_ATTRIBUTE extr1_tmpl[] = {
-        {CKA_VALUE, key1_value, sizeof(key1_value)}
-    };
+	CK_ATTRIBUTE  extr1_tmpl[] =
+	{
+		{CKA_VALUE, key1_value, sizeof(key1_value)}
+	};
 
-    CK_ATTRIBUTE extr2_tmpl[] = {
-        {CKA_VALUE, key2_value, sizeof(key2_value)}
-    };
+	CK_ATTRIBUTE  extr2_tmpl[] =
+	{
+		{CKA_VALUE, key2_value, sizeof(key2_value)}
+	};
 
-    if (do_import)
-        testcase_begin("starting do_ImportDeriveDHKey...");
-    else
-        testcase_begin("starting do_GenerateDeriveDHKey...");
-    testcase_rw_session();
-    testcase_user_login();
+	testcase_begin("starting do_DeriveDHKey...");
+	testcase_rw_session();
+	testcase_user_login();
 
-    // Testcase #1 - Generate 2 DH key pairs.
-    testcase_new_assertion();
+	// Testcase #1 - Generate 2 DH key pairs.
+	testcase_new_assertion();
 
-    if (!do_import) {
-        // First, generate the DH key Pair for Party A
-        mech.mechanism = CKM_DH_PKCS_KEY_PAIR_GEN;
-        mech.ulParameterLen = 0;
-        mech.pParameter = NULL;
+	// First, generate the DH key Pair for Party A
+	mech.mechanism = CKM_DH_PKCS_KEY_PAIR_GEN;
+	mech.ulParameterLen = 0;
+	mech.pParameter = NULL;
 
-        rc = funcs->C_GenerateKeyPair(session, &mech, publ_tmpl, 5,
-                                      priv_tmpl, 4, &publ_key, &priv_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_GenerateKeyPair #1: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Now generate a key-pair for party B (the peer)
-        mech.mechanism = CKM_DH_PKCS_KEY_PAIR_GEN;
-        mech.ulParameterLen = 0;
-        mech.pParameter = NULL;
+	rc = funcs->C_GenerateKeyPair(session, &mech, publ_tmpl, 5,
+					priv_tmpl, 4, &publ_key, &priv_key);
+	if (rc != CKR_OK) {
+		testcase_fail("C_GenerateKeyPair #1: rc = %s", p11_get_ckr(rc));
+		goto testcase_cleanup;
+	}
 
-        rc = funcs->C_GenerateKeyPair(session, &mech, publ_tmpl, 5,
-                                      priv_tmpl, 4, &peer_publ_key,
-                                      &peer_priv_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_GenerateKeyPair #2: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Extract the peer's public key
-        rc = funcs->C_GetAttributeValue(session, peer_publ_key, extr1_tmpl, 1);
-        if (rc != CKR_OK) {
-            testcase_error("C_GetAttributeValue #1: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Make sure peer's key is the right size
-        if ((extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)) &&
-            (extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) - 1)) {
-            testcase_fail("ERROR:size error peer's key %ld",
-                          extr1_tmpl[0].ulValueLen);
-            goto testcase_cleanup;
-        } else {
-            testcase_pass("Successfully generated DH keys");
-        }
-    } else {
-        // First, import the DH key Pair for Party A
+	// Now generate a key-pair for party B (the peer)
+	mech.mechanism = CKM_DH_PKCS_KEY_PAIR_GEN;
+	mech.ulParameterLen = 0;
+	mech.pParameter = NULL;
 
-        // import the private key for Party A
-        rc = create_DHPrivateKey(session,
-                                 DH_PUBL_PRIME, sizeof(DH_PUBL_PRIME),
-                                 DH_PUBL_BASE, sizeof(DH_PUBL_BASE),
-                                 DH_PRIVATE_A, sizeof(DH_PRIVATE_A), &priv_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_CreateObject (DH Private Key) failed rc=%s",
-                          p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // import the public key for Party A
-        rc = create_DHPublicKey(session,
-                                DH_PUBL_PRIME, sizeof(DH_PUBL_PRIME),
-                                DH_PUBL_BASE, sizeof(DH_PUBL_BASE),
-                                DH_PUBLIC_A, sizeof(DH_PUBLIC_A), &publ_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_CreateObject (DH Public Key) failed rc=%s",
-                          p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // import the private key for Party B
-        rc = create_DHPrivateKey(session,
-                                 DH_PUBL_PRIME, sizeof(DH_PUBL_PRIME),
-                                 DH_PUBL_BASE, sizeof(DH_PUBL_BASE),
-                                 DH_PRIVATE_B, sizeof(DH_PRIVATE_B),
-                                 &peer_priv_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_CreateObject (DH Private Key) failed rc=%s",
-                          p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // import the public key for Party B
-        rc = create_DHPublicKey(session,
-                                DH_PUBL_PRIME, sizeof(DH_PUBL_PRIME),
-                                DH_PUBL_BASE, sizeof(DH_PUBL_BASE),
-                                DH_PUBLIC_B, sizeof(DH_PUBLIC_B),
-                                &peer_publ_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_CreateObject (DH Public Key) failed rc=%s",
-                          p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Extract the peer's public key
-        rc = funcs->C_GetAttributeValue(session, peer_publ_key, extr1_tmpl, 1);
-        if (rc != CKR_OK) {
-            testcase_error("C_GetAttributeValue #1: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Make sure peer's key is the right size
-        if ((extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)) &&
-            (extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) - 1)) {
-            testcase_fail("ERROR:size error peer's key %ld",
-                          extr1_tmpl[0].ulValueLen);
-            goto testcase_cleanup;
-        } else {
-            testcase_pass("Successfully imported DH keys");
-        }
-    }
+	rc = funcs->C_GenerateKeyPair(session, &mech, publ_tmpl, 5,
+				priv_tmpl, 4, &peer_publ_key, &peer_priv_key);
+	if (rc != CKR_OK) {
+		testcase_fail("C_GenerateKeyPair #2: rc = %s", p11_get_ckr(rc));
+		goto testcase_cleanup;
+	}
 
-    // Testcase #2 - Now derive the secrets...
-    if (!securekey) {
-        // Note: this is a clear key token testcase since comparing
-        //       key values.
-        testcase_new_assertion();
+	// Extract the peer's public key
+	rc = funcs->C_GetAttributeValue(session, peer_publ_key, extr1_tmpl, 1);
+	if (rc != CKR_OK) {
+		testcase_error("C_GetAttributeValue #1: rc = %s", p11_get_ckr(rc));
+		goto testcase_cleanup;
+	}
 
-        /* Now, derive a generic secret key using party A's
-         * private key and peer's public key
-         */
-        mech.mechanism = CKM_DH_PKCS_DERIVE;
-        mech.ulParameterLen = extr1_tmpl[0].ulValueLen;
-        mech.pParameter = key1_value;
+	// Make sure peer's key is the right size
+	if ((extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)) &&
+	    (extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)-1)) {
+		testcase_fail("ERROR:size error peer's key %ld",extr1_tmpl[0].ulValueLen );
+		goto testcase_cleanup;
+	} else
+		testcase_pass("Successfully derived key");
 
-        rc = funcs->C_DeriveKey(session, &mech, priv_key, secret_tmpl,
-                                4, &secret_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_DeriveKey #1: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Do the same for the peer
+	// Testcase #2 - Now derive the secrets...
+	if (!securekey) {
+		// Note: this is a clear key token testcase since comparing
+		//       key values.
+		testcase_new_assertion();
 
-        // Extract party A's public key
-        rc = funcs->C_GetAttributeValue(session, publ_key, extr2_tmpl, 1);
-        if (rc != CKR_OK) {
-            testcase_error("C_GetAttributeValue #2: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Make sure party A's key is the right size
-        if ((extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)) &&
-            (extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) - 1)) {
-            testcase_fail("ERROR:size error party A's key %ld",
-                          extr2_tmpl[0].ulValueLen);
-            goto testcase_cleanup;
-        }
-        // Now, derive a generic secret key using peer's private key
-        // and A's public key
-        mech.mechanism = CKM_DH_PKCS_DERIVE;
-        mech.ulParameterLen = extr2_tmpl[0].ulValueLen;
-        mech.pParameter = key2_value;
+		/* Now, derive a generic secret key using party A's
+		 * private key and peer's public key
+		 */
+		mech.mechanism  = CKM_DH_PKCS_DERIVE;
+		mech.ulParameterLen = extr1_tmpl[0].ulValueLen ;
+		mech.pParameter = key1_value;
 
-        rc = funcs->C_DeriveKey(session, &mech, peer_priv_key,
-                                secret_tmpl, 4, &peer_secret_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_DeriveKey #2: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Extract the derived keys and compare them
+		rc = funcs->C_DeriveKey(session, &mech, priv_key, secret_tmpl,
+					4, &secret_key) ;
+		if (rc != CKR_OK) {
+			testcase_fail("C_DeriveKey #1: rc = %s", p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
 
-        memset(key1_value, 0, sizeof(key1_value));
-        extr1_tmpl[0].ulValueLen = sizeof(key1_value);
+		// Do the same for the peer
 
-        rc = funcs->C_GetAttributeValue(session, secret_key, extr1_tmpl, 1);
-        if (rc != CKR_OK) {
-            testcase_error("C_GetAttributeValue #3:rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
+		// Extract party A's public key
+		rc = funcs->C_GetAttributeValue(session, publ_key,
+						 extr2_tmpl, 1);
+		if (rc != CKR_OK) {
+			testcase_error("C_GetAttributeValue #2: rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
 
-        if (extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) ||
-            *((int *) extr1_tmpl[0].pValue) == 0) {
-            testcase_fail("ERROR:derived key #1 length or value %ld",
-                          extr1_tmpl[0].ulValueLen);
-            goto testcase_cleanup;
-        }
+		// Make sure party A's key is the right size
+		if ((extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)) &&
+			(extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)-1)) {
+			testcase_fail("ERROR:size error party A's key %ld",extr2_tmpl[0].ulValueLen);
+			goto testcase_cleanup;
+		}
 
-        memset(key2_value, 0, sizeof(key2_value));
-        extr2_tmpl[0].ulValueLen = sizeof(key2_value);
+		// Now, derive a generic secret key using peer's private key
+		// and A's public key
+		mech.mechanism = CKM_DH_PKCS_DERIVE;
+		mech.ulParameterLen = extr2_tmpl[0].ulValueLen;
+		mech.pParameter = key2_value;
 
-        rc = funcs->C_GetAttributeValue(session, peer_secret_key,
-                                        extr2_tmpl, 1);
-        if (rc != CKR_OK) {
-            testcase_error("C_GetAttributeValue #4:rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
+		rc = funcs->C_DeriveKey(session, &mech, peer_priv_key,
+					secret_tmpl, 4, &peer_secret_key);
+		if (rc != CKR_OK) {
+			testcase_fail("C_DeriveKey #2: rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
 
-        if (extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) ||
-            *((int *) extr2_tmpl[0].pValue) == 0) {
-            testcase_fail("ERROR:derived key #2 length or value %ld",
-                          extr2_tmpl[0].ulValueLen);
-            goto testcase_cleanup;
-        }
+		// Extract the derived keys and compare them
 
-        if (memcmp(key1_value, key2_value, sizeof(DH_PUBL_PRIME)) != 0) {
-            testcase_fail("ERROR:derived key mismatch");
-            goto testcase_cleanup;
-        }
+		memset(key1_value,0,sizeof(key1_value));
+		extr1_tmpl[0].ulValueLen= sizeof(key1_value);
 
-        testcase_pass("Generating DH key pairs and deriving secrets");
+		rc = funcs->C_GetAttributeValue(session, secret_key,
+						extr1_tmpl, 1);
+		if (rc != CKR_OK) {
+			testcase_error("C_GetAttributeValue #3:rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
 
-        goto testcase_cleanup;
+		if (extr1_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) ||
+			*((int*)extr1_tmpl[0].pValue) == 0) {
+			testcase_fail("ERROR:derived key #1 length or value %ld", extr1_tmpl[0].ulValueLen );
+			goto testcase_cleanup;
+		}
 
-    } else {
+		memset(key2_value,0,sizeof(key2_value));
+		extr2_tmpl[0].ulValueLen= sizeof(key2_value);
 
-        // Testcase for secure key token - encode/decode with secrect key and
-        // peer secret key
-        testcase_new_assertion();
+		rc = funcs->C_GetAttributeValue(session, peer_secret_key,
+						extr2_tmpl, 1);
+		if (rc != CKR_OK) {
+			testcase_error("C_GetAttributeValue #4:rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
 
-        secret_key_size = 32;
-        secret_key_type = CKK_AES;
-        for (i = 0; i < 32; i++)
-            clear[i] = i;
+		if (extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) ||
+			*((int*)extr2_tmpl[0].pValue) == 0) {
+			testcase_fail("ERROR:derived key #2 length or value %ld", extr2_tmpl[0].ulValueLen );
+			goto testcase_cleanup;
+		}
 
-        /* Now, derive a generic secret key using party A's
-         * private key and peer's public key
-         */
-        mech.mechanism = CKM_DH_PKCS_DERIVE;
-        mech.ulParameterLen = extr1_tmpl[0].ulValueLen;
-        mech.pParameter = key1_value;
+		if (memcmp(key1_value, key2_value, sizeof(DH_PUBL_PRIME)) != 0){
+			testcase_fail("ERROR:derived key mismatch");
+			goto testcase_cleanup;
+		}
 
-        rc = funcs->C_DeriveKey(session, &mech, priv_key, secret_tmpl,
-                                4, &secret_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_DeriveKey #1: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Do the same for the peer
+		testcase_pass("Generating DH key pairs and deriving secrets");
 
-        // Extract party A's public key
-        rc = funcs->C_GetAttributeValue(session, publ_key, extr2_tmpl, 1);
-        if (rc != CKR_OK) {
-            testcase_error("C_GetAttributeValue #2: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Make sure party A's key is the right size
-        if ((extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)) &&
-            (extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME) - 1)) {
-            testcase_fail("ERROR:size error party A's key %ld",
-                          extr2_tmpl[0].ulValueLen);
-            goto testcase_cleanup;
-        }
-        // Now, derive a generic secret key using peer's private key
-        // and A's public key
-        mech.mechanism = CKM_DH_PKCS_DERIVE;
-        mech.ulParameterLen = extr2_tmpl[0].ulValueLen;
-        mech.pParameter = key2_value;
+		goto testcase_cleanup;
 
-        rc = funcs->C_DeriveKey(session, &mech, peer_priv_key,
-                                secret_tmpl, 4, &peer_secret_key);
-        if (rc != CKR_OK) {
-            testcase_fail("C_DeriveKey #2: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
-        // Extract the derived keys and compare them
+	} else {
 
-        mech.mechanism = CKM_AES_ECB;
-        mech.ulParameterLen = 0;
-        mech.pParameter = NULL;
+		// Testcase for secure key token - encode/decode with secrect key and peer secret key
+		testcase_new_assertion();
 
-        rc = funcs->C_EncryptInit(session, &mech, secret_key);
-        if (rc != CKR_OK) {
-            testcase_error("C_EncryptInit secret_key: rc = %s",
-                           p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
+		secret_key_size = 32;
+		secret_key_type = CKK_AES;
+		for (i = 0; i < 32; i++)
+			clear[i] = i;
 
-        rc = funcs->C_Encrypt(session, clear, 32, cipher, &cipher_len);
-        if (rc != CKR_OK) {
-            testcase_error("C_Encrypt secret_key: rc = %s", p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
+		/* Now, derive a generic secret key using party A's
+		 * private key and peer's public key
+		 */
+		mech.mechanism  = CKM_DH_PKCS_DERIVE;
+		mech.ulParameterLen = extr1_tmpl[0].ulValueLen ;
+		mech.pParameter = key1_value;
 
-        rc = funcs->C_DecryptInit(session, &mech, peer_secret_key);
-        if (rc != CKR_OK) {
-            testcase_error("C_DecryptInit peer_secret_key: rc = %s",
-                           p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
+		rc = funcs->C_DeriveKey(session, &mech, priv_key, secret_tmpl,
+					4, &secret_key) ;
+		if (rc != CKR_OK) {
+			testcase_fail("C_DeriveKey #1: rc = %s", p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
 
-        rc = funcs->C_Decrypt(session, cipher, cipher_len, re_cipher,
-                              &re_cipher_len);
-        if (rc != CKR_OK) {
-            testcase_error("C_Decrypt peer secret_key: rc = %s",
-                           p11_get_ckr(rc));
-            goto testcase_cleanup;
-        }
+		// Do the same for the peer
 
-        if (memcmp(clear, re_cipher, 32) != 0) {
-            testcase_fail("ERROR:data mismatch");
-            goto testcase_cleanup;
-        }
+		// Extract party A's public key
+		rc = funcs->C_GetAttributeValue(session, publ_key, extr2_tmpl, 1);
+		if (rc != CKR_OK) {
+			testcase_error("C_GetAttributeValue #2: rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
 
-        testcase_pass("Generating DH key pairs and deriving secrets");
-    }
+		// Make sure party A's key is the right size
+		if ((extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)) &&
+			(extr2_tmpl[0].ulValueLen != sizeof(DH_PUBL_PRIME)-1)) {
+			testcase_fail("ERROR:size error party A's key %ld",extr2_tmpl[0].ulValueLen);
+			goto testcase_cleanup;
+		}
+
+		// Now, derive a generic secret key using peer's private key
+		// and A's public key
+		mech.mechanism = CKM_DH_PKCS_DERIVE;
+		mech.ulParameterLen = extr2_tmpl[0].ulValueLen;
+		mech.pParameter = key2_value;
+
+		rc = funcs->C_DeriveKey(session, &mech, peer_priv_key,
+					secret_tmpl, 4, &peer_secret_key);
+		if (rc != CKR_OK) {
+			testcase_fail("C_DeriveKey #2: rc = %s", p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
+
+		// Extract the derived keys and compare them
+
+		mech.mechanism = CKM_AES_ECB;
+		mech.ulParameterLen = 0;
+		mech.pParameter = NULL;
+
+		rc = funcs->C_EncryptInit(session,&mech,secret_key);
+		if (rc != CKR_OK) {
+			testcase_error("C_EncryptInit secret_key: rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
+
+		rc = funcs->C_Encrypt(session, clear, 32, cipher, &cipher_len);
+		if (rc != CKR_OK) {
+			testcase_error("C_Encrypt secret_key: rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
+
+		rc = funcs->C_DecryptInit(session, &mech, peer_secret_key);
+		if (rc != CKR_OK) {
+			testcase_error("C_DecryptInit peer_secret_key: rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
+
+		rc = funcs->C_Decrypt(session, cipher, cipher_len, re_cipher,
+					&re_cipher_len);
+		if (rc != CKR_OK) {
+			testcase_error("C_Decrypt peer secret_key: rc = %s",
+					p11_get_ckr(rc));
+			goto testcase_cleanup;
+		}
+
+		if (memcmp(clear, re_cipher, 32) != 0) {
+			testcase_fail("ERROR:data mismatch");
+			goto testcase_cleanup;
+		}
+
+		testcase_pass("Generating DH key pairs and deriving secrets");
+	}
 
 testcase_cleanup:
-    funcs->C_DestroyObject(session, publ_key);
-    funcs->C_DestroyObject(session, priv_key);
-    funcs->C_DestroyObject(session, peer_priv_key);
-    funcs->C_DestroyObject(session, peer_publ_key);
-    funcs->C_DestroyObject(session, secret_key);
-    funcs->C_DestroyObject(session, peer_secret_key);
+	funcs->C_DestroyObject(session, publ_key);
+	funcs->C_DestroyObject(session, priv_key);
+	funcs->C_DestroyObject(session, peer_priv_key);
+	funcs->C_DestroyObject(session, peer_publ_key);
+	funcs->C_DestroyObject(session, secret_key);
+	funcs->C_DestroyObject(session, peer_secret_key);
 
-    loc_rc = funcs->C_CloseSession(session);
-    if (loc_rc != CKR_OK)
-        testcase_error("C_CloseSession, loc_rc = %s", p11_get_ckr(loc_rc));
-
-    return rc;
-}                               /* end do_DeriveDHKey() */
+	loc_rc = funcs->C_CloseSession(session);
+	if (loc_rc != CKR_OK)
+		testcase_error("C_CloseSession, loc_rc = %s", p11_get_ckr(loc_rc));
+	return rc;
+} /* end do_DeriveDHKey() */
 
 CK_RV dh_functions()
 {
-    CK_RV rv, rv2;
-    CK_MECHANISM_INFO mechinfo;
+	CK_RV  rv, rv2;
+	CK_MECHANISM_INFO mechinfo;
 
-    /** get mech info **/
-    rv = funcs->C_GetMechanismInfo(SLOT_ID, CKM_DH_PKCS_KEY_PAIR_GEN,
-                                   &mechinfo);
-    rv2 = funcs->C_GetMechanismInfo(SLOT_ID, CKM_DH_PKCS_DERIVE, &mechinfo);
+	/** get mech info **/
+	rv = funcs->C_GetMechanismInfo(SLOT_ID, CKM_DH_PKCS_KEY_PAIR_GEN,
+					&mechinfo);
+	rv2 = funcs->C_GetMechanismInfo(SLOT_ID, CKM_DH_PKCS_DERIVE, &mechinfo);
 
-    if ((rv == CKR_OK) && (rv2 == CKR_OK)) {
-        rv = do_DeriveDHKey(FALSE);
+	if ((rv == CKR_OK) && (rv2 == CKR_OK))
+		rv = do_DeriveDHKey();
+	else {
+		/*
+		 ** One of the above mechanism is not available, so skip
+		 ** the test but do not report any
+		 ** rv = CKR_MECHANISM_INVALID;
+		 ** invalid or however failures as this is not a failure.
+		 **/
+		return CKR_OK;
+	}
 
-        if ((rv == CKR_OK) && (rv2 == CKR_OK))
-            rv = do_DeriveDHKey(TRUE);
-    } else {
-        /*
-         ** One of the above mechanism is not available, so skip
-         ** the test but do not report any
-         ** rv = CKR_MECHANISM_INVALID;
-         ** invalid or however failures as this is not a failure.
-         **/
-        return CKR_OK;
-    }
-
-    return rv;
+	return rv;
 }
 
 int main(int argc, char **argv)
 {
-    CK_C_INITIALIZE_ARGS cinit_args;
-    int rc;
-    CK_RV rv;
+	CK_C_INITIALIZE_ARGS cinit_args;
+	int rc;
+	CK_RV rv;
 
-    rc = do_ParseArgs(argc, argv);
-    if (rc != 1)
-        return rc;
+	rc = do_ParseArgs(argc, argv);
+	if ( rc != 1)
+		return rc;
 
-    printf("Using slot #%lu...\n\n", SLOT_ID);
-    printf("With option: no_init: %d\n", no_init);
+	printf("Using slot #%lu...\n\n", SLOT_ID );
+	printf("With option: no_init: %d\n", no_init);
 
-    rc = do_GetFunctionList();
-    if (!rc) {
-        PRINT_ERR("ERROR do_GetFunctionList() Failed , rc = 0x%0x\n", rc);
-        return rc;
-    }
+	rc = do_GetFunctionList();
+	if (!rc) {
+		PRINT_ERR("ERROR do_GetFunctionList() Failed , rc = 0x%0x\n", rc);
+		return rc;
+	}
 
-    memset(&cinit_args, 0x0, sizeof(cinit_args));
-    cinit_args.flags = CKF_OS_LOCKING_OK;
+	memset( &cinit_args, 0x0, sizeof(cinit_args) );
+	cinit_args.flags = CKF_OS_LOCKING_OK;
 
-    // SAB Add calls to ALL functions before the C_Initialize gets hit
+	// SAB Add calls to ALL functions before the C_Initialize gets hit
 
-    funcs->C_Initialize(&cinit_args);
+	funcs->C_Initialize( &cinit_args );
 
-    /*
-     * -securekey option is needed on CCA and EP11 token,
-     *  otherwise the testcase will fail. However, now this
-     *  will be done automatically here.
-     */
-    if (is_ep11_token(SLOT_ID) || is_cca_token(SLOT_ID))
-        securekey = 1;
+	/*
+	 * -securekey option is needed on CCA and EP11 token,
+	 *  otherwise the testcase will fail. However, now this
+	 *  will be done automatically here.
+	 */
+	if (is_ep11_token(SLOT_ID) || is_cca_token(SLOT_ID))
+		securekey = 1;
 
-    {
-        CK_SESSION_HANDLE hsess = 0;
+	{
+		CK_SESSION_HANDLE  hsess = 0;
 
-        rc = funcs->C_GetFunctionStatus(hsess);
-        if (rc != CKR_FUNCTION_NOT_PARALLEL)
-            return rc;
+		rc = funcs->C_GetFunctionStatus(hsess);
+		if (rc  != CKR_FUNCTION_NOT_PARALLEL)  
+			return rc;
 
-        rc = funcs->C_CancelFunction(hsess);
-        if (rc != CKR_FUNCTION_NOT_PARALLEL)
-            return rc;
-    }
+		rc = funcs->C_CancelFunction(hsess);
+		if (rc  != CKR_FUNCTION_NOT_PARALLEL)
+			return rc;
+	}
 
-    testcase_setup(0);
+	testcase_setup(0);
 
-    rv = dh_functions();
+	rv = dh_functions();
 
-    testcase_print_result();
+	testcase_print_result();
 
-    funcs->C_Finalize(NULL);
+	funcs->C_Finalize(NULL);
 
-    /* make sure we return non-zero if rv is non-zero */
-    return ((rv == 0) || (rv % 256) ? (int)rv : -1);
+	/* make sure we return non-zero if rv is non-zero */
+	return ((rv==0) || (rv % 256) ? rv : -1);
 }
