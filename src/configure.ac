@@ -1,30 +1,52 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([openCryptoki],[3.10.0],[opencryptoki-tech@lists.sourceforge.net])
+AC_PREREQ([2.69])
+AC_INIT([openCryptoki],[3.11.0],[opencryptoki-tech@lists.sourceforge.net],[],[https://github.com/opencryptoki/opencryptoki])
+AC_CONFIG_SRCDIR([testcases/common/common.c])
 
 dnl Needed for $target!
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE([foreign 1.6 subdir-objects])
+AM_INIT_AUTOMAKE([-Wall -Wno-portability foreign subdir-objects])
 
 dnl Checks for header files.
 AC_DISABLE_STATIC
 LT_INIT
 
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h limits.h strings.h sys/file.h syslog.h unistd.h])
+AC_CHECK_HEADER_STDBOOL
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h libintl.h limits.h locale.h malloc.h \
+		  nl_types.h stddef.h sys/file.h sys/socket.h sys/time.h   \
+		  sys/timeb.h syslog.h termios.h])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_INLINE
+AC_C_RESTRICT
 AC_C_CONST
 AC_TYPE_UID_T
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
+AC_TYPE_MODE_T
+AC_TYPE_INT8_T
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_UINT8_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
 AC_STRUCT_TM
+
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
-AC_FUNC_MEMCMP
-AC_FUNC_STRFTIME
-AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([getcwd])
+AC_FUNC_CHOWN
+AC_FUNC_FORK
+AC_FUNC_MALLOC
+AC_FUNC_MKTIME
+AC_FUNC_MMAP
+AC_FUNC_REALLOC
+AC_FUNC_STRERROR_R
+AC_CHECK_FUNCS([atexit ftruncate gettimeofday localtime_r memchr memmove \
+		memset mkdir munmap regcomp select socket strchr strcspn \
+		strdup strerror strncasecmp strrchr strstr strtol strtoul])
 
 dnl Used in various scripts
 AC_PATH_PROG([ID], [id], [/us/bin/id])
@@ -33,8 +55,10 @@ AC_PATH_PROG([GROUPADD], [groupadd], [/usr/sbin/groupadd])
 AC_PATH_PROG([CAT], [cat], [/bin/cat])
 AC_PATH_PROG([CHMOD], [chmod], [/bin/chmod])
 AC_PATH_PROG([CHGRP], [chgrp], [/bin/chgrp])
-AC_PROG_SED
-AC_PROG_MKDIR_P
+AC_PROG_AWK
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
 
 AM_PROG_LEX
 if test "x$LEX" != "xflex"; then
@@ -488,6 +512,9 @@ if test "x$enable_ep11tok" = "xyes"; then
 		AC_MSG_ERROR([ep11 token build requested but ep11 development files not found])
 		enable_ep11=no
 	fi
+	AC_CHECK_HEADER([ica_api.h], [], [
+		AC_MSG_ERROR([ep11 token build requested but Libica headers couldn't be found])
+	])
 fi
 if test "x$enable_ep11tok" != "xno" -a "x$with_zcrypt" != "xno"; then
         enable_ep11tok=yes
@@ -571,7 +598,7 @@ else
 fi
 AM_CONDITIONAL([ENABLE_LOCKS], [test "x$enable_locks" = "xyes"])
 
-CFLAGS="$CFLAGS -DPKCS64 -D_XOPEN_SOURCE=600 -Wall -Wno-pointer-sign"
+CFLAGS="$CFLAGS -DPKCS64 -D_XOPEN_SOURCE=600 -Wall -Wextra"
 
 CFLAGS+=' -DCONFIG_PATH=\"$(localstatedir)/lib/opencryptoki\" -DSBIN_PATH=\"$(sbindir)\" -DLIB_PATH=\"$(libdir)\" -DLOCKDIR_PATH=\"$(lockdir)\" -DOCK_CONFDIR=\"$(sysconfdir)/opencryptoki\" -DOCK_LOGDIR=\"$(logdir)\"'
 
@@ -580,46 +607,17 @@ AC_PROG_CC
 
 AC_CONFIG_MACRO_DIRS([m4])
 
-AC_CONFIG_FILES([Makefile usr/Makefile \
-          usr/include/Makefile \
-          usr/include/pkcs11/Makefile \
-          usr/lib/Makefile \
-          usr/lib/pkcs11/Makefile \
-          usr/lib/pkcs11/api/Makefile \
-          usr/lib/pkcs11/api/shrd_mem.c \
-          usr/lib/pkcs11/ica_s390_stdll/Makefile \
-          usr/sbin/Makefile \
-          usr/sbin/pkcsslotd/Makefile \
-          usr/sbin/pkcsconf/Makefile \
-          usr/sbin/pkcsicsf/Makefile \
-          usr/sbin/pkcscca/Makefile \
-          usr/sbin/pkcsep11_migrate/Makefile \
-          usr/sbin/pkcsep11_session/Makefile \
-          usr/lib/pkcs11/soft_stdll/Makefile \
-          usr/lib/pkcs11/ep11_stdll/Makefile \
-          usr/lib/pkcs11/tpm_stdll/Makefile \
-          usr/lib/pkcs11/cca_stdll/Makefile \
-          usr/lib/pkcs11/icsf_stdll/Makefile \
-          misc/Makefile \
-	  testcases/Makefile \
-	  testcases/common/Makefile \
-	  testcases/crypto/Makefile \
-	  testcases/pkcs11/Makefile \
-	  testcases/login/Makefile \
-	  testcases/misc_tests/Makefile \
-	  man/Makefile \
-	  man/man1/Makefile \
-	  man/man1/pkcsconf.1 \
-	  man/man1/pkcsicsf.1 \
-	  man/man1/pkcscca.1 \
-	  man/man1/pkcsep11_migrate.1 \
-	  man/man1/pkcsep11_session.1 \
-	  man/man5/Makefile \
-	  man/man5/opencryptoki.conf.5 \
-	  man/man7/Makefile \
-	  man/man7/opencryptoki.7 \
-	  man/man8/Makefile \
-	  man/man8/pkcsslotd.8])
+AC_CONFIG_FILES([Makefile				\
+		 usr/lib/api/shrd_mem.c			\
+		 man/man1/pkcsconf.1			\
+		 man/man1/pkcsicsf.1			\
+		 man/man1/pkcscca.1			\
+		 man/man1/pkcsep11_migrate.1		\
+		 man/man1/pkcsep11_session.1		\
+		 man/man5/opencryptoki.conf.5		\
+		 man/man7/opencryptoki.7		\
+		 man/man8/pkcsslotd.8])
+
 AC_OUTPUT
 
 echo "Enabled features:"

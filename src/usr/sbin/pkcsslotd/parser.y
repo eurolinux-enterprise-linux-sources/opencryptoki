@@ -68,7 +68,7 @@ static const struct ock_key ock_keywords[] = {
 void set_init(void);
 void set_defaults(void);
 int lookup_keyword(const char *key);
-int do_str(char *slotinfo, int size, char* kw, char *val);
+int do_str(char *slotinfo, size_t size, char* kw, char *val);
 int do_vers(CK_VERSION *slotinfo, char *kw, char *val);
 
 %}
@@ -128,11 +128,11 @@ keyword_defs:
 			memcpy(sinfo_struct.dll_location, $3, strlen($3));
 			break;
 		case KW_SLOTDESC:
-			do_str(sinfo_struct.pk_slot.slotDescription,
+			do_str((char *)sinfo_struct.pk_slot.slotDescription,
 			  sizeof(sinfo_struct.pk_slot.slotDescription), $1, $3);
 			break;
 		case KW_MANUFID:
-			do_str(sinfo_struct.pk_slot.manufacturerID,
+			do_str((char *)sinfo_struct.pk_slot.manufacturerID,
 			   sizeof(sinfo_struct.pk_slot.manufacturerID), $1, $3);
 			break;
 		case KW_HWVERSION:
@@ -176,16 +176,22 @@ void
 set_defaults(void)
 {
 	/* set some defaults if user hasn't set these. */
-	if (!sinfo_struct.pk_slot.slotDescription[0])
+	if (!sinfo_struct.pk_slot.slotDescription[0]) {
+		memset(&sinfo_struct.pk_slot.slotDescription[0], ' ',
+		       sizeof(sinfo_struct.pk_slot.slotDescription));
 		memcpy(&sinfo_struct.pk_slot.slotDescription[0],
 			DEF_SLOTDESC, strlen(DEF_SLOTDESC));
-	if (!sinfo_struct.pk_slot.manufacturerID[0])
+	}
+	if (!sinfo_struct.pk_slot.manufacturerID[0]) {
+		memset(&sinfo_struct.pk_slot.manufacturerID[0], ' ',
+		       sizeof(sinfo_struct.pk_slot.manufacturerID));
 		memcpy(&sinfo_struct.pk_slot.manufacturerID[0],
 			DEF_MANUFID, strlen(DEF_MANUFID));
+	}
 }
 
 int
-do_str(char *slotinfo, int size, char* kw, char *val)
+do_str(char *slotinfo, size_t size, char* kw, char *val)
 {
 	if (strlen(val) > size) {
 		snprintf(errbuf, ERRSTRLEN, "%s has too many characters\n", kw);

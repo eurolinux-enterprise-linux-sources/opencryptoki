@@ -2,15 +2,25 @@
 
 Name:			opencryptoki
 Summary:		Implementation of the PKCS#11 (Cryptoki) specification v2.11
-Version:		3.10.0
-Release:		2%{?dist}
+Version:		3.11.0
+Release:		3%{?dist}
 License:		CPL
 Group:			System Environment/Base
 URL:			https://github.com/opencryptoki/opencryptoki
-Source0:		https://github.com/opencryptoki/%{name}/archive/v%{version}.tar.gz
-Source1:		%{name}-tmpfiles.conf
+Source0:		https://github.com/opencryptoki/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 
-Patch0:			opencryptoki-3.10-ica-token.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=732756
+Patch0:        opencryptoki-3.11.0-group.patch
+# bz#1373833, change tmpfiles snippets from /var/lock/* to /run/lock/*
+Patch1:        opencryptoki-3.11.0-lockdir.patch
+# bz#1063763, inform the user that he is not in pkcs11 group
+Patch2:        opencryptoki-3.11.0-warn-user-not-in-pkcs11-group.patch
+# EP11 token fails when using Strict-Session mode or VHSM-Mode
+Patch3:        opencryptoki-3.11.0-1dae7c15e7bc3bb5b5aad72b851e0b9cd328bb0b.patch
+# coverity issues
+Patch4:        opencryptoki-3.11.0-covscan.patch
+# bz#1688891, C_EncryptInit fails with CKR_KEY_TYPE_INCONSISTENT. on ep11 token when using imported RSA public key
+Patch5:        opencryptoki-3.11.0-bedf46da28da6231607a12e35414cd59b4432f9f.patch
 
 Requires(pre):		shadow-utils coreutils sed
 BuildRequires:		openssl-devel
@@ -177,22 +187,15 @@ configured with Enterprise PKCS#11 (EP11) firmware.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1 -b .ica
+%patch0 -p1 -b .group
+%patch1 -p1 -b .lockdir
+%patch2 -p1 -b .warn-user-not-in-pkcs11-group
+%patch3 -p1 -b .EP11_token_fails_when_using_Strict-Session_mode_or_VHSM-Mode
+%patch4 -p1 -b .coverity
+%patch5 -p1 -b .created-MACed-SPKIs-when-importing-public-keys
 
 # Upstream tarball has unnecessary executable perms set on the sources
 find . -name '*.[ch]' -print0 | xargs -0 chmod -x
-
-# append token specific subdirs to tmpfiles.d config
-token_subdirs="icsf swtok tpm"
-%ifarch s390 s390x
-token_subdirs="$token_subdirs lite ccatok ep11tok"
-%endif
-
-cp -p %{SOURCE1} %{name}-tmpfiles.conf
-for d in $token_subdirs
-do
-    echo "D /var/lock/opencryptoki/$d 0770 root pkcs11 -" >> %{name}-tmpfiles.conf
-done
 
 %build
 ./bootstrap.sh
@@ -214,9 +217,6 @@ make install DESTDIR=$RPM_BUILD_ROOT CHGRP=/bin/true
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{name}/*.la
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{name}/stdll/*.la
 
-# systemd must create /var/lock/opencryptoki
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
-install -m 0644 %{name}-tmpfiles.conf $RPM_BUILD_ROOT%{_tmpfilesdir}/%{name}.conf
 
 
 %post libs -p /sbin/ldconfig
@@ -245,6 +245,9 @@ exit 0
 
 %post
 %systemd_post pkcsslotd.service
+if test $1 -eq 1; then
+    %tmpfiles_create
+fi
 
 %preun
 %systemd_preun pkcsslotd.service
@@ -270,8 +273,8 @@ exit 0
 %{_libdir}/opencryptoki/methods
 %{_libdir}/pkcs11/methods
 %dir %attr(770,root,pkcs11) %{_sharedstatedir}/%{name}
-%dir %attr(770,root,pkcs11) %{_localstatedir}/lock/%{name}
-%dir %attr(770,root,pkcs11) %{_localstatedir}/lock/%{name}/*
+%ghost %dir %attr(770,root,pkcs11) %{_rundir}/lock/%{name}
+%ghost %dir %attr(770,root,pkcs11) %{_rundir}/lock/%{name}/*
 %dir %attr(770,root,pkcs11) %{_localstatedir}/log/opencryptoki
 
 %files libs
@@ -344,6 +347,20 @@ exit 0
 
 
 %changelog
+* Thu Mar 14 2019 Than Ngo <than@redhat.com> - 3.11.0-3
+- Resolves: #1688891 - C_EncryptInit fails with CKR_KEY_TYPE_INCONSISTENT. on ep11 token when using imported RSA public key
+
+* Thu Feb 21 2019 Than Ngo <than@redhat.com> - 3.11.0-2
+- Resolves: #1678788 - EP11 token fails when using Strict-Session mode or VHSM-Mode
+
+* Tue Feb 19 2019 Than Ngo <than@redhat.com> - 3.11.0-1
+- Resolves: #1063763 - opencryptoki tools should inform the user that he is not in pkcs11 group 
+- Resolves: #1641027 - enhanced IBM z14 functions
+- Resolves: #1641026 - support m_*Single functions from ep11 lib
+- Resolves: #1641025 - rebase to 3.11.0
+- Resolves: #1519386 - use CPACF hashes in ep11 token
+- Resolves: #1373833 - lock file directory is %%ghost now
+
 * Thu Aug 23 2018 Sinny Kumari <skumari@redhat.com> - 3.10.0-2
 - Resolves: #1613743 - ICA Token specific des3 cbc encrypt failed - token not available
 
