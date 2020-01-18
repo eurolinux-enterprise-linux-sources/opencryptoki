@@ -1,9 +1,15 @@
 /*
- * Licensed materials, Property of IBM Corp.
+ * COPYRIGHT (c) International Business Machines Corp. 2001-2017
  *
+ * This program is provided under the terms of the Common Public License,
+ * version 1.0 (CPL-1.0). Any use, reproduction or distribution for this
+ * software constitutes recipient's acceptance of CPL-1.0 terms which can be
+ * found in the file LICENSE file or at
+ * https://opensource.org/licenses/cpl1.0.php
+ */
+
+/*
  * openCryptoki CCA token
- *
- * (C) COPYRIGHT International Business Machines Corp. 2001, 2002, 2006
  *
  * Author: Kent E. Yoder <yoder1@us.ibm.com>
  *
@@ -177,10 +183,19 @@ MECH_LIST_ELEMENT mech_list[] = {
 	{CKM_EC_KEY_PAIR_GEN, {160, 521, CKF_HW|CKF_GENERATE_KEY_PAIR|
 					CKF_EC_NAMEDCURVE|CKF_EC_F_P}},
 	{CKM_ECDSA, {160, 521, CKF_HW|CKF_SIGN|CKF_VERIFY|CKF_EC_NAMEDCURVE|
-			      CKF_EC_F_P}},
+					CKF_EC_F_P}},
 	{CKM_ECDSA_SHA1, {160, 521, CKF_HW|CKF_SIGN|CKF_VERIFY|
-				   CKF_EC_NAMEDCURVE|CKF_EC_F_P}},
-        {CKM_GENERIC_SECRET_KEY_GEN, {80, 2048, CKF_HW|CKF_GENERATE}}
+					CKF_EC_NAMEDCURVE|CKF_EC_F_P}},
+		{CKM_GENERIC_SECRET_KEY_GEN, {80, 2048, CKF_HW|CKF_GENERATE}},
+	{CKM_ECDSA_SHA256, {160, 521, CKF_HW|CKF_SIGN|CKF_VERIFY|
+					CKF_EC_NAMEDCURVE|CKF_EC_F_P}},
+		{CKM_GENERIC_SECRET_KEY_GEN, {80, 2048, CKF_HW|CKF_GENERATE}},
+	{CKM_ECDSA_SHA384, {160, 521, CKF_HW|CKF_SIGN|CKF_VERIFY|
+					CKF_EC_NAMEDCURVE|CKF_EC_F_P}},
+		{CKM_GENERIC_SECRET_KEY_GEN, {80, 2048, CKF_HW|CKF_GENERATE}},
+	{CKM_ECDSA_SHA512, {160, 521, CKF_HW|CKF_SIGN|CKF_VERIFY|
+					CKF_EC_NAMEDCURVE|CKF_EC_F_P}},
+		{CKM_GENERIC_SECRET_KEY_GEN, {80, 2048, CKF_HW|CKF_GENERATE}}
 };
 
 CK_ULONG mech_list_len = (sizeof(mech_list) / sizeof(MECH_LIST_ELEMENT));

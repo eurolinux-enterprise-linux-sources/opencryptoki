@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([openCryptoki],[3.6.2],[opencryptoki-tech@lists.sourceforge.net])
+AC_INIT([openCryptoki],[3.7.0],[opencryptoki-tech@lists.sourceforge.net])
 
 dnl Needed for $target!
 AC_CANONICAL_SYSTEM
@@ -35,8 +35,22 @@ AC_PATH_PROG([CHMOD], [chmod], [/bin/chmod])
 AC_PATH_PROG([CHGRP], [chgrp], [/bin/chgrp])
 AC_PROG_SED
 AC_PROG_MKDIR_P
+
 AM_PROG_LEX
+if test "x$LEX" != "xflex"; then
+    AC_MSG_ERROR(['flex' is missing on your system. Please install 'flex'.])
+fi
+
 AC_PROG_YACC
+if test "x$YACC" = "xyacc"; then
+    # AC_PROG_YACC only checks for yacc replacements, not for yacc itself
+    AC_CHECK_PROG([YACC_FOUND], [yacc], [yes], [no])
+    if test "x$YACC_FOUND" = "xno"; then
+        AC_MSG_ERROR(['YACC' program is missing on your system. Please install 'bison'.])
+    fi
+fi
+
+AC_CHECK_LIB([itm], [_ITM_commitTransaction], [], AC_MSG_ERROR(["libitm couldn't be found"]))
 
 dnl Define custom variables
 
@@ -554,7 +568,7 @@ fi
 
 AM_CONDITIONAL([ENABLE_PKCSEP11_MIGRATE], [test "x$enable_pkcsep11_migrate" = "xyes"])
 
-CFLAGS="$CFLAGS -DPKCS64 -D_XOPEN_SOURCE=600 -Wall -Wno-pointer-sign"
+CFLAGS="$CFLAGS -DPKCS64 -D_XOPEN_SOURCE=600 -Wall -Wno-pointer-sign -fgnu-tm"
 
 CFLAGS+=' -DCONFIG_PATH=\"$(localstatedir)/lib/opencryptoki\" -DSBIN_PATH=\"$(sbindir)\" -DLIB_PATH=\"$(libdir)\" -DLOCKDIR_PATH=\"$(lockdir)\" -DOCK_CONFDIR=\"$(sysconfdir)/opencryptoki\" -DOCK_LOGDIR=\"$(logdir)\"'
 

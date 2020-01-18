@@ -1,3 +1,13 @@
+/*
+ * COPYRIGHT (c) International Business Machines Corp. 2013-2017
+ *
+ * This program is provided under the terms of the Common Public License,
+ * version 1.0 (CPL-1.0). Any use, reproduction or distribution for this
+ * software constitutes recipient's acceptance of CPL-1.0 terms which can be
+ * found in the file LICENSE file or at
+ * https://opensource.org/licenses/cpl1.0.php
+ */
+
 #ifndef _MECH_TO_STR_
 #define _MECH_TO_STR_
 #include "pkcs11types.h"
@@ -372,6 +382,12 @@ mech_to_str(CK_ULONG mech)
 		 		 return "CKM_ECDSA";
 		 if (mech == CKM_ECDSA_SHA1)
 		 		 return "CKM_ECDSA_SHA1";
+		 if (mech == CKM_ECDSA_SHA256)
+				 return "CKM_ECDSA_SHA256";
+		 if (mech == CKM_ECDSA_SHA384)
+				 return "CKM_ECDSA_SHA384";
+		 if (mech == CKM_ECDSA_SHA512)
+				 return "CKM_ECDSA_SHA512";
 		 if (mech == CKM_ECDH1_DERIVE)
 		 		 return "CKM_ECDH1_DERIVE";
 		 if (mech == CKM_ECDH1_COFACTOR_DERIVE)

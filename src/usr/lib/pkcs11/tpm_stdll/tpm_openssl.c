@@ -1,23 +1,11 @@
-
 /*
- * The Initial Developer of the Original Code is International
- * Business Machines Corporation. Portions created by IBM
- * Corporation are Copyright (C) 2005 International Business
- * Machines Corporation. All Rights Reserved.
+ * COPYRIGHT (c) International Business Machines Corp. 2005-2017
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the Common Public License as published by
- * IBM Corporation; either version 1 of the License, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * Common Public License for more details.
- *
- * You should have received a copy of the Common Public License
- * along with this program; if not, a copy can be viewed at
- * http://www.opensource.org/licenses/cpl1.0.php.
+ * This program is provided under the terms of the Common Public License,
+ * version 1.0 (CPL-1.0). Any use, reproduction or distribution for this
+ * software constitutes recipient's acceptance of CPL-1.0 terms which can be
+ * found in the file LICENSE file or at
+ * https://opensource.org/licenses/cpl1.0.php
  */
 
 #include <sys/types.h>
@@ -76,7 +64,9 @@ openssl_gen_key()
 	RSA *rsa;
 	int rc, counter = 0;
 	char buf[32];
-	BIGNUM *bne;
+	#ifndef OLDER_OPENSSL
+		BIGNUM *bne;
+	#endif
 
 	token_specific_rng((CK_BYTE *)buf, 32);
 	RAND_seed(buf, 32);
@@ -217,7 +207,9 @@ int
 openssl_get_modulus_and_prime(RSA *rsa, unsigned int *size_n, unsigned char *n,
 		unsigned int *size_p, unsigned char *p)
 {
-	const BIGNUM *n_tmp, *p_tmp;
+	#ifndef OLDER_OPENSSL
+		const BIGNUM *n_tmp, *p_tmp;
+	#endif
 
 	/* get the modulus from the RSA object */
 #ifdef OLDER_OPENSSL
@@ -232,7 +224,7 @@ openssl_get_modulus_and_prime(RSA *rsa, unsigned int *size_n, unsigned char *n,
 
 	/* get one of the primes from the RSA object */
 #ifdef OLDER_OPENSSL
-	if ((*size_n = BN_bn2bin(rsa->p, p)) <= 0) {
+	if ((*size_p = BN_bn2bin(rsa->p, p)) <= 0) {
 #else
 	RSA_get0_factors(rsa, &p_tmp, NULL);
 	if ((*size_p = BN_bn2bin(p_tmp, p)) <= 0) {
@@ -243,4 +235,3 @@ openssl_get_modulus_and_prime(RSA *rsa, unsigned int *size_n, unsigned char *n,
 
 	return 0;
 }
-

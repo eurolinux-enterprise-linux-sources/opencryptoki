@@ -1,3 +1,12 @@
+/*
+ * COPYRIGHT (c) International Business Machines Corp. 2003-2017
+ *
+ * This program is provided under the terms of the Common Public License,
+ * version 1.0 (CPL-1.0). Any use, reproduction or distribution for this
+ * software constitutes recipient's acceptance of CPL-1.0 terms which can be
+ * found in the file LICENSE file or at
+ * https://opensource.org/licenses/cpl1.0.php
+ */
 
 /*
  * openCryptoki testcase
@@ -24,15 +33,13 @@
 int do_GetFunctionList(void);
 int clean_up(void);
 
-void *dl_handle;
-
 CK_SLOT_ID		slot_id;
 CK_FUNCTION_LIST	*funcs;
 CK_SESSION_HANDLE	sess;
 
 /*
  * do_HW_Feature_Seatch Test:
- * 
+ *
  * 1. Create 5 objects, 3 of which are HW_FEATURE objects.
  * 2. Search for objects using a template that does not have its
  *    HW_FEATURE attribute set.
@@ -42,7 +49,7 @@ CK_SESSION_HANDLE	sess;
  *    HW_FEATURE attribute set.
  * 5. Result should be that the 3 hardware feature objects are returned.
  *
- */ 
+ */
 
 int do_HW_Feature_Search(void)
 {
@@ -116,8 +123,8 @@ int do_HW_Feature_Search(void)
         CK_OBJECT_HANDLE        h_counter1,
 				h_counter2,
 				h_clock,
-				h_obj1, 
-				h_obj2, 
+				h_obj1,
+				h_obj2,
 				obj_list[10];
 	CK_ATTRIBUTE		find_tmpl[] = {
 		{CKA_CLASS,	&counter1_class, sizeof(counter1_class)}
@@ -181,14 +188,14 @@ int do_HW_Feature_Search(void)
 	}
 
 	if (obj_list[0] != h_obj1 && obj_list[0] != h_obj2) {
-		printf("%s:%d ERROR:  C_FindObjects #1 found the wrong objects!",
+		printf("%s:%d ERROR:  C_FindObjects #1 found the wrong objects!\n",
 				__FILE__, __LINE__);
 		rc = -1;
 		goto done;
 	}
 
 	if (obj_list[1] != h_obj1 && obj_list[1] != h_obj2) {
-		printf("%s:%d ERROR:  C_FindObjects #1 found the wrong objects!",
+		printf("%s:%d ERROR:  C_FindObjects #1 found the wrong objects!\n",
 				__FILE__, __LINE__);
 		rc = -1;
 		goto done;
@@ -227,10 +234,10 @@ int do_HW_Feature_Search(void)
 	for( i=0; i < find_count; i++) {
 		if(	obj_list[i] != h_counter1 &&
 			obj_list[i] != h_counter2 &&
-			obj_list[i] != h_clock) 
+			obj_list[i] != h_clock)
 		{
 
-			printf("%s:%d ERROR:  C_FindObjects #2 found the wrong"
+			printf("%s:%d ERROR:  C_FindObjects #2 found the wrong\n"
 					" objects!", __FILE__, __LINE__);
 			rc = -1;
 		}
@@ -280,7 +287,7 @@ int main(int argc, char **argv)
 
 	printf("Using slot %ld...\n\n", slot_id);
 
-	if(do_GetFunctionList())
+	if(!do_GetFunctionList())
 		return -1;
 
 	/* There will be no multi-threaded Cryptoki access in this app */
@@ -292,10 +299,10 @@ int main(int argc, char **argv)
 	}
 
 	/* Open a session with the token */
-	if( (rc = funcs->C_OpenSession(slot_id, 
-					(CKF_SERIAL_SESSION|CKF_RW_SESSION), 
-					NULL_PTR, 
-					NULL_PTR, 
+	if( (rc = funcs->C_OpenSession(slot_id,
+					(CKF_SERIAL_SESSION|CKF_RW_SESSION),
+					NULL_PTR,
+					NULL_PTR,
 					&sess)) != CKR_OK ) {
 		show_error("C_OpenSession #1", rc);
 		goto done;
@@ -342,9 +349,5 @@ int clean_up(void)
         if( (rc = funcs->C_Finalize(NULL)) != CKR_OK)
 		show_error("C_Finalize", rc);
 
-	/* Decrement the reference count to libopencryptoki.so */
-	dlclose(dl_handle);
-
 	return rc;
 }
-

@@ -2,12 +2,12 @@
 
 Name:			opencryptoki
 Summary:		Implementation of the PKCS#11 (Cryptoki) specification v2.11
-Version:		3.6.2
+Version:		3.7.0
 Release:		1%{?dist}
 License:		CPL
 Group:			System Environment/Base
-URL:			http://sourceforge.net/projects/opencryptoki
-Source0:		http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+URL:			https://github.com/opencryptoki/opencryptoki
+Source0:		https://github.com/opencryptoki/%{name}/archive/v%{version}.tar.gz
 Source1:		%{name}-tmpfiles.conf
 # do not install pkcsep11_migrate.1 and pkcscca.1 when it's not enabled
 # https://bugzilla.redhat.com/show_bug.cgi?id=732756
@@ -22,6 +22,7 @@ BuildRequires:		openldap-devel
 BuildRequires:		autoconf automake libtool
 BuildRequires:		bison flex
 BuildRequires:		systemd
+BuildRequires:		libitm-devel
 %ifarch s390 s390x
 BuildRequires:		libica-devel >= 2.5
 %endif
@@ -345,6 +346,10 @@ exit 0
 
 
 %changelog
+* Tue Oct 03 2017 Sinny Kumari <skumari@redhat.com> - 3.7.0-1
+- RHBZ#1456520 - Rebase opencryptoki to 3.7.0
+- Include libitm-devel as BuildRequires
+
 * Mon Feb 20 2017 Sinny Kumari <skumari@redhat.com> - 3.6.2-1
 - Rebase opencryptoki to 3.6.2
 - Remove patches from spec file applied during 3.5 release
